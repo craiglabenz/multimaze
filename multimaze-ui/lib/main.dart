@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,18 +31,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int playerX = 0;
+  int playerY = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Maze(
-        rows: 30,
-        columns: 30,
-        borderColor: Colors.blue,
-        borderThickness: 1,
-        gamePieceLocation: const Coordinates(x: 3, y: 1),
+      body: RawKeyboardListener(
+        focusNode: FocusNode(),
+        onKey: (RawKeyEvent event) {
+          if (event is RawKeyUpEvent) {
+            return;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            setState(() => playerY++);
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            setState(() => playerY--);
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+            setState(() => playerX--);
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+            setState(() => playerX++);
+          }
+        },
+        child: Maze(
+          rows: 30,
+          columns: 30,
+          borderColor: Colors.blue,
+          borderThickness: 1,
+          gamePieceLocation: Coordinates(x: playerX, y: playerY),
+        ),
       ),
     );
   }
@@ -246,7 +267,7 @@ class _SizedMaze extends StatelessWidget {
               color: gamePieceColor,
             ),
           ),
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 20),
         ),
       ],
     );
