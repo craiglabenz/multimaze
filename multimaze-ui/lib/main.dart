@@ -36,9 +36,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const Maze(
-        rows: 15,
+      body: Maze(
+        rows: 30,
         columns: 30,
+        borderColor: Colors.blue,
+        borderThickness: 1,
+        gamePieceLocation: const Coordinates(x: 3, y: 1),
       ),
     );
   }
@@ -49,6 +52,10 @@ class Maze extends StatelessWidget {
     Key? key,
     required this.rows,
     required this.columns,
+    required this.gamePieceLocation,
+    this.gamePieceColor = Colors.pink,
+    this.borderColor = Colors.blue,
+    this.borderThickness = 1.0,
     this.paddingOnConstrainedSide = 0.1,
   })  : assert(paddingOnConstrainedSide >= 0),
         assert(paddingOnConstrainedSide <= 1),
@@ -66,6 +73,12 @@ class Maze extends StatelessWidget {
   /// is the most constrained dimension.
   final double paddingOnConstrainedSide;
 
+  /// The fill color of the game piece.
+  final Color gamePieceColor;
+
+  /// The fill color of the board's boundary and inner lines.
+  final Color borderColor;
+
   /// The height of the maze in game squares.
   ///
   /// The actual size in pixels will be determined by maximizing this against
@@ -77,6 +90,12 @@ class Maze extends StatelessWidget {
   /// The actual size in pixels will be determined by maximizing this against
   /// available screen real estate.
   final int columns;
+
+  /// The location on the board where the game piece should be drawn.
+  final Coordinates gamePieceLocation;
+
+  /// The thickness in pixels at which to draw each line.
+  final double borderThickness;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +113,7 @@ class Maze extends StatelessWidget {
 
         // Because each game position must be a square, the smallest max ideal
         // size will be the height and width of all squares.
+        // Note that this size currently includes each square's border.
         final double squareSize = min(maxIdealWidth, maxIdealHeight);
 
         // Height of the maze in pixels. We will leave positioning to a `Center`
@@ -109,10 +129,26 @@ class Maze extends StatelessWidget {
           vertical: (constraints.maxHeight - mazeHeight) / 2,
         );
 
+        // print('$mazeWidth, $mazeHeight');
+
         return Center(
           child: Padding(
             padding: mazePadding,
-            child: _SizedMaze(rows: rows, columns: columns),
+            child: Container(
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(color: borderColor, width: borderThickness)),
+              child: _SizedMaze(
+                rows: rows,
+                columns: columns,
+                innerHeight: mazeHeight - (2 * borderThickness),
+                innerWidth: mazeWidth - (2 * borderThickness),
+                borderColor: borderColor,
+                borderThickness: borderThickness,
+                gamePieceColor: gamePieceColor,
+                gamePieceLocation: gamePieceLocation,
+              ),
+            ),
           ),
         );
       },
@@ -125,24 +161,108 @@ class _SizedMaze extends StatelessWidget {
     Key? key,
     required this.rows,
     required this.columns,
+    required this.innerHeight,
+    required this.innerWidth,
+    required this.borderColor,
+    required this.borderThickness,
+    required this.gamePieceColor,
+    required this.gamePieceLocation,
   }) : super(key: key);
 
   /// The height of the maze in game squares.
-  ///
-  /// The actual size in pixels will be determined by maximizing this against
-  /// available screen real estate.
   final int rows;
 
   /// The width of the maze in game squares.
-  ///
-  /// The actual size in pixels will be determined by maximizing this against
-  /// available screen real estate.
   final int columns;
+
+  /// The thickness in pixels at which to draw each line.
+  final double borderThickness;
+
+  /// The fill color of the game piece.
+  final Color gamePieceColor;
+
+  /// The fill color of the board's boundary and inner lines.
+  final Color borderColor;
+
+  /// The location on the board where the game piece should be drawn.
+  final Coordinates gamePieceLocation;
+
+  /// The height of the maze in pixels.
+  ///
+  /// As it is the "inner" height, the 1px perimeter border has already been
+  /// accounted for; so there is no need to subtract 2 from this value.
+  final double innerHeight;
+
+  /// The width of the maze in pixels.
+  ///
+  /// As it is the "inner" width, the 1px perimeter border has already been
+  /// accounted for; so there is no need to subtract 2 from this value.
+  final double innerWidth;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
+    final squareSize = innerWidth / columns;
+
+    final gamePieceX = gamePieceLocation.x * squareSize;
+    final gamePieceY = gamePieceLocation.y * squareSize;
+
+    final horizontalBars = <Widget>[];
+    for (int _ in List<int>.generate(rows - 1, (i) => i)) {
+      horizontalBars
+          .add(Container(height: borderThickness, color: borderColor));
+    }
+
+    final verticalBars = <Widget>[];
+    for (int _ in List<int>.generate(columns - 1, (i) => i)) {
+      verticalBars.add(Container(width: borderThickness, color: borderColor));
+    }
+
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          height: innerHeight,
+          width: innerWidth,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: horizontalBars,
+          ),
+        ),
+        Positioned(
+          height: innerHeight,
+          width: innerWidth,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: verticalBars,
+          ),
+        ),
+        AnimatedPositioned(
+          left: gamePieceX + (borderThickness / 4),
+          bottom: gamePieceY + (borderThickness / 4),
+          height: squareSize - borderThickness,
+          width: squareSize - borderThickness,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(squareSize),
+              color: gamePieceColor,
+            ),
+          ),
+          duration: const Duration(milliseconds: 200),
+        ),
+      ],
     );
   }
+}
+
+/// Specifies a location on the game board as an (X,Y) distance from the origin.
+///
+/// Although graphics draw from the upper-left of a screen, visualizing a game
+/// board is more intuitive treating the bottom-left as the origin. Thus, these
+/// coordinates assume the bottom-left square is (0,0).
+///
+/// Note that *squares* are valid game locations, not lines, so a game board of
+/// size 10x10 will have valid coordinates ranging from (0,0) to (9,9).
+class Coordinates {
+  const Coordinates({required this.x, required this.y});
+  final int x;
+  final int y;
 }
