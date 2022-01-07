@@ -60,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
           rows: 30,
           columns: 30,
           borderColor: Colors.blue,
+          gridColor: Colors.grey[50]!,
           borderThickness: 1,
           gamePieceLocation: Coordinates(x: playerX, y: playerY),
         ),
@@ -76,6 +77,7 @@ class Maze extends StatelessWidget {
     required this.gamePieceLocation,
     this.gamePieceColor = Colors.pink,
     this.borderColor = Colors.blue,
+    this.gridColor = Colors.blue,
     this.borderThickness = 1.0,
     this.paddingOnConstrainedSide = 0.1,
   })  : assert(paddingOnConstrainedSide >= 0),
@@ -97,8 +99,11 @@ class Maze extends StatelessWidget {
   /// The fill color of the game piece.
   final Color gamePieceColor;
 
-  /// The fill color of the board's boundary and inner lines.
+  /// The fill color of the board's boundary lines.
   final Color borderColor;
+
+  /// The fill color of the board's inner lines.
+  final Color gridColor;
 
   /// The height of the maze in game squares.
   ///
@@ -168,6 +173,7 @@ class Maze extends StatelessWidget {
                 borderThickness: borderThickness,
                 gamePieceColor: gamePieceColor,
                 gamePieceLocation: gamePieceLocation,
+                gridColor: gridColor,
               ),
             ),
           ),
@@ -188,6 +194,7 @@ class _SizedMaze extends StatelessWidget {
     required this.borderThickness,
     required this.gamePieceColor,
     required this.gamePieceLocation,
+    required this.gridColor,
   }) : super(key: key);
 
   /// The height of the maze in game squares.
@@ -202,8 +209,11 @@ class _SizedMaze extends StatelessWidget {
   /// The fill color of the game piece.
   final Color gamePieceColor;
 
-  /// The fill color of the board's boundary and inner lines.
+  /// The fill color of the board's boundary lines.
   final Color borderColor;
+
+  /// The fill color of the board's inner lines.
+  final Color gridColor;
 
   /// The location on the board where the game piece should be drawn.
   final Coordinates gamePieceLocation;
@@ -229,13 +239,12 @@ class _SizedMaze extends StatelessWidget {
 
     final horizontalBars = <Widget>[];
     for (int _ in List<int>.generate(rows - 1, (i) => i)) {
-      horizontalBars
-          .add(Container(height: borderThickness, color: borderColor));
+      horizontalBars.add(Container(height: borderThickness, color: gridColor));
     }
 
     final verticalBars = <Widget>[];
     for (int _ in List<int>.generate(columns - 1, (i) => i)) {
-      verticalBars.add(Container(width: borderThickness, color: borderColor));
+      verticalBars.add(Container(width: borderThickness, color: gridColor));
     }
 
     return Stack(
@@ -267,7 +276,7 @@ class _SizedMaze extends StatelessWidget {
               color: gamePieceColor,
             ),
           ),
-          duration: const Duration(milliseconds: 20),
+          duration: const Duration(milliseconds: 50),
         ),
       ],
     );
