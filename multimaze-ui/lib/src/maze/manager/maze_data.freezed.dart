@@ -60,6 +60,9 @@ abstract class $MazeDataCopyWith<$Res> {
       List<Coordinates> wallLocations,
       int rows,
       int columns});
+
+  $CoordinatesCopyWith<$Res> get playerLocation;
+  $CoordinatesCopyWith<$Res> get targetLocation;
 }
 
 /// @nodoc
@@ -101,6 +104,20 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
               as int,
     ));
   }
+
+  @override
+  $CoordinatesCopyWith<$Res> get playerLocation {
+    return $CoordinatesCopyWith<$Res>(_value.playerLocation, (value) {
+      return _then(_value.copyWith(playerLocation: value));
+    });
+  }
+
+  @override
+  $CoordinatesCopyWith<$Res> get targetLocation {
+    return $CoordinatesCopyWith<$Res>(_value.targetLocation, (value) {
+      return _then(_value.copyWith(targetLocation: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -114,6 +131,11 @@ abstract class _$MazeDataCopyWith<$Res> implements $MazeDataCopyWith<$Res> {
       List<Coordinates> wallLocations,
       int rows,
       int columns});
+
+  @override
+  $CoordinatesCopyWith<$Res> get playerLocation;
+  @override
+  $CoordinatesCopyWith<$Res> get targetLocation;
 }
 
 /// @nodoc

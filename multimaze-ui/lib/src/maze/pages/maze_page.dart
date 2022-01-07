@@ -22,12 +22,22 @@ class MazePage extends ConsumerWidget {
           }
           if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
             // setState(() => playerY++);
+            ref.read(mazeManagerProvider.notifier).send(const MoveCommand.up());
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            ref
+                .read(mazeManagerProvider.notifier)
+                .send(const MoveCommand.down());
             // setState(() => playerY--);
           } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
             // setState(() => playerX--);
+            ref
+                .read(mazeManagerProvider.notifier)
+                .send(const MoveCommand.left());
           } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
             // setState(() => playerX++);
+            ref
+                .read(mazeManagerProvider.notifier)
+                .send(const MoveCommand.right());
           }
         },
         child: Maze(

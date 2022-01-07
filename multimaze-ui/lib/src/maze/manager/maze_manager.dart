@@ -51,6 +51,29 @@ class MazeManager extends StateNotifier<MazeData> {
       rows: rawMaze.length,
     );
   }
+
+  void send(MoveCommand command) {
+    final oldX = state.playerLocation.x;
+    final oldY = state.playerLocation.y;
+    final newLocation = command.map(
+      up: (_) => Coordinates(x: oldX, y: oldY + 1),
+      down: (_) => Coordinates(x: oldX, y: oldY - 1),
+      left: (_) => Coordinates(x: oldX - 1, y: oldY),
+      right: (_) => Coordinates(x: oldX + 1, y: oldY),
+    );
+    if (newLocation.x < 0 ||
+        newLocation.y < 0 ||
+        newLocation.x > state.columns - 1 ||
+        newLocation.y > state.rows - 1) {
+      // Nothing to do here. The game silently discards moves out of bounds.
+      return;
+    }
+    if (state.wallLocations.contains(newLocation)) {
+      // Nothing to do here. The game silently discards moves into walls.
+      return;
+    }
+    state = state.copyWith(playerLocation: newLocation);
+  }
 }
 
 final mazeManagerProvider = StateNotifierProvider<MazeManager, MazeData>(
