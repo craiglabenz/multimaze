@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:multimaze/src/maze/maze.dart';
 
-class MazePage extends StatefulWidget {
+class MazePage extends ConsumerWidget {
   const MazePage({Key? key}) : super(key: key);
 
   @override
-  State<MazePage> createState() => _MazePageState();
-}
-
-class _MazePageState extends State<MazePage> {
-  int playerX = 0;
-  int playerY = 0;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final MazeData mazeData = ref.watch(mazeManagerProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text('MultiMaze'),
+        title: const Text('MultiMaze'),
       ),
       body: RawKeyboardListener(
         focusNode: FocusNode(),
@@ -27,33 +21,23 @@ class _MazePageState extends State<MazePage> {
             return;
           }
           if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            setState(() => playerY++);
+            // setState(() => playerY++);
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            setState(() => playerY--);
+            // setState(() => playerY--);
           } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-            setState(() => playerX--);
+            // setState(() => playerX--);
           } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-            setState(() => playerX++);
+            // setState(() => playerX++);
           }
         },
         child: Maze(
-          rows: 10,
-          columns: 10,
+          rows: mazeData.rows,
+          columns: mazeData.columns,
           borderColor: Colors.blue,
           gridColor: Colors.grey[50]!,
           borderThickness: 1,
-          gamePieceLocation: Coordinates(x: playerX, y: playerY),
-          wallLocations: <Coordinates>[
-            Coordinates(x: 1, y: 1),
-            Coordinates(x: 2, y: 1),
-            Coordinates(x: 3, y: 1),
-            Coordinates(x: 4, y: 1),
-            Coordinates(x: 5, y: 1),
-            Coordinates(x: 6, y: 1),
-            Coordinates(x: 7, y: 1),
-            Coordinates(x: 8, y: 1),
-            Coordinates(x: 9, y: 1),
-          ],
+          gamePieceLocation: mazeData.playerLocation,
+          wallLocations: mazeData.wallLocations,
         ),
       ),
     );
