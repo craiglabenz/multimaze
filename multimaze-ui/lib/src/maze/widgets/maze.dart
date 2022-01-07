@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:multimaze/src/maze/maze.dart';
 
-import '../helpers/helpers.dart';
-
-/// The UI grid that
+/// The UI grid that renders walls and the player indicator.
+///
+/// The [Maze] widget mostly exists to figure out sizing concerns, and then
+/// delegates all actual rendering to [_SizedMaze].
 class Maze extends StatelessWidget {
   const Maze({
     Key? key,
@@ -99,6 +101,9 @@ class Maze extends StatelessWidget {
           vertical: (constraints.maxHeight - mazeHeight) / 2,
         );
 
+        final double innerHeight = mazeHeight - (2 * borderThickness);
+        final double innerWidth = mazeWidth - (2 * borderThickness);
+
         return Center(
           child: Padding(
             padding: mazePadding,
@@ -109,8 +114,8 @@ class Maze extends StatelessWidget {
               child: _SizedMaze(
                 rows: rows,
                 columns: columns,
-                innerHeight: mazeHeight - (2 * borderThickness),
-                innerWidth: mazeWidth - (2 * borderThickness),
+                innerHeight: innerHeight,
+                innerWidth: innerWidth,
                 borderColor: borderColor,
                 borderThickness: borderThickness,
                 gamePieceColor: gamePieceColor,
@@ -127,6 +132,10 @@ class Maze extends StatelessWidget {
   }
 }
 
+/// Renders a maze to the maximum size of its parent.
+///
+/// Because the aspect ratio of both the window and maze are unpredictable, this
+/// should be only be used within a [Maze] widget.
 class _SizedMaze extends StatelessWidget {
   const _SizedMaze({
     Key? key,
@@ -186,7 +195,6 @@ class _SizedMaze extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final squareSize = innerWidth / columns;
-
     final gamePieceX = gamePieceLocation.x * squareSize;
     final gamePieceY = gamePieceLocation.y * squareSize;
 
@@ -234,18 +242,11 @@ class _SizedMaze extends StatelessWidget {
           ),
         ),
         ...wallBlocks,
-        AnimatedPositioned(
+        PlayerIndicator(
           left: gamePieceX + (borderThickness / 4),
           bottom: gamePieceY + (borderThickness / 4),
-          height: squareSize - borderThickness,
-          width: squareSize - borderThickness,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(squareSize),
-              color: gamePieceColor,
-            ),
-          ),
-          duration: const Duration(milliseconds: 50),
+          size: squareSize - borderThickness,
+          color: gamePieceColor,
         ),
       ],
     );
