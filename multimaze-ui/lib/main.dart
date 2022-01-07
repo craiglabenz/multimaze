@@ -57,12 +57,23 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         },
         child: Maze(
-          rows: 30,
-          columns: 30,
+          rows: 10,
+          columns: 10,
           borderColor: Colors.blue,
           gridColor: Colors.grey[50]!,
           borderThickness: 1,
           gamePieceLocation: Coordinates(x: playerX, y: playerY),
+          wallLocations: <Coordinates>[
+            Coordinates(x: 1, y: 1),
+            Coordinates(x: 2, y: 1),
+            Coordinates(x: 3, y: 1),
+            Coordinates(x: 4, y: 1),
+            Coordinates(x: 5, y: 1),
+            Coordinates(x: 6, y: 1),
+            Coordinates(x: 7, y: 1),
+            Coordinates(x: 8, y: 1),
+            Coordinates(x: 9, y: 1),
+          ],
         ),
       ),
     );
@@ -75,9 +86,11 @@ class Maze extends StatelessWidget {
     required this.rows,
     required this.columns,
     required this.gamePieceLocation,
+    required this.wallLocations,
     this.gamePieceColor = Colors.pink,
     this.borderColor = Colors.blue,
     this.gridColor = Colors.blue,
+    this.wallsColor = Colors.black,
     this.borderThickness = 1.0,
     this.paddingOnConstrainedSide = 0.1,
   })  : assert(paddingOnConstrainedSide >= 0),
@@ -105,6 +118,9 @@ class Maze extends StatelessWidget {
   /// The fill color of the board's inner lines.
   final Color gridColor;
 
+  /// The fill color of the board's walls.
+  final Color wallsColor;
+
   /// The height of the maze in game squares.
   ///
   /// The actual size in pixels will be determined by maximizing this against
@@ -119,6 +135,10 @@ class Maze extends StatelessWidget {
 
   /// The location on the board where the game piece should be drawn.
   final Coordinates gamePieceLocation;
+
+  /// Coordinates of game squares that contain impassible walls. These are what
+  /// make the maze a maze instead of an empty field.
+  final List<Coordinates> wallLocations;
 
   /// The thickness in pixels at which to draw each line.
   final double borderThickness;
@@ -155,15 +175,13 @@ class Maze extends StatelessWidget {
           vertical: (constraints.maxHeight - mazeHeight) / 2,
         );
 
-        // print('$mazeWidth, $mazeHeight');
-
         return Center(
           child: Padding(
             padding: mazePadding,
             child: Container(
               decoration: BoxDecoration(
-                  border:
-                      Border.all(color: borderColor, width: borderThickness)),
+                border: Border.all(color: borderColor, width: borderThickness),
+              ),
               child: _SizedMaze(
                 rows: rows,
                 columns: columns,
@@ -174,6 +192,8 @@ class Maze extends StatelessWidget {
                 gamePieceColor: gamePieceColor,
                 gamePieceLocation: gamePieceLocation,
                 gridColor: gridColor,
+                wallsColor: wallsColor,
+                wallLocations: wallLocations,
               ),
             ),
           ),
@@ -195,6 +215,8 @@ class _SizedMaze extends StatelessWidget {
     required this.gamePieceColor,
     required this.gamePieceLocation,
     required this.gridColor,
+    required this.wallsColor,
+    required this.wallLocations,
   }) : super(key: key);
 
   /// The height of the maze in game squares.
@@ -215,8 +237,15 @@ class _SizedMaze extends StatelessWidget {
   /// The fill color of the board's inner lines.
   final Color gridColor;
 
+  /// The fill color of the board's walls.
+  final Color wallsColor;
+
   /// The location on the board where the game piece should be drawn.
   final Coordinates gamePieceLocation;
+
+  /// Coordinates of game squares that contain impassible walls. These are what
+  /// make the maze a maze instead of an empty field.
+  final List<Coordinates> wallLocations;
 
   /// The height of the maze in pixels.
   ///
@@ -247,6 +276,21 @@ class _SizedMaze extends StatelessWidget {
       verticalBars.add(Container(width: borderThickness, color: gridColor));
     }
 
+    final wallBlocks = <Widget>[];
+    for (final wallLocation in wallLocations) {
+      wallBlocks.add(
+        Positioned(
+          bottom: squareSize * wallLocation.y,
+          left: squareSize * wallLocation.x,
+          child: Container(
+            height: squareSize,
+            width: squareSize,
+            color: wallsColor,
+          ),
+        ),
+      );
+    }
+
     return Stack(
       children: <Widget>[
         Positioned(
@@ -265,6 +309,7 @@ class _SizedMaze extends StatelessWidget {
             children: verticalBars,
           ),
         ),
+        ...wallBlocks,
         AnimatedPositioned(
           left: gamePieceX + (borderThickness / 4),
           bottom: gamePieceY + (borderThickness / 4),
