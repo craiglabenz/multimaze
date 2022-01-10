@@ -11,6 +11,7 @@ class MazeData with _$MazeData {
     required List<Coordinates> wallLocations,
     required int rows,
     required int columns,
+    required int activePlayers,
   }) = _MazeData;
 
   static const rawEmptySquare = ' ';

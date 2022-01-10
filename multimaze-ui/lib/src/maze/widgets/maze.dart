@@ -13,6 +13,7 @@ class Maze extends StatelessWidget {
     required this.columns,
     required this.gamePieceLocation,
     required this.wallLocations,
+    required this.activePlayers,
     this.gamePieceColor = Colors.pink,
     this.borderColor = Colors.blue,
     this.gridColor = Colors.blue,
@@ -59,6 +60,11 @@ class Maze extends StatelessWidget {
   /// available screen real estate.
   final int columns;
 
+  /// The number of active connections to the game.
+  ///
+  /// This is for display purposes only and has no other effect on the UI.
+  final int activePlayers;
+
   /// The location on the board where the game piece should be drawn.
   final Coordinates gamePieceLocation;
 
@@ -96,38 +102,51 @@ class Maze extends StatelessWidget {
         // widget.
         final double mazeWidth = columns * squareSize;
 
-        final EdgeInsets mazePadding = EdgeInsets.fromLTRB(
-          (constraints.maxWidth - mazeWidth) / 2,
-          (constraints.maxHeight - mazeHeight) / 1.5,
-          (constraints.maxWidth - mazeWidth) / 2,
-          (constraints.maxHeight - mazeHeight) / 3,
-        );
-
         final double innerHeight = mazeHeight - (2 * borderThickness);
         final double innerWidth = mazeWidth - (2 * borderThickness);
 
-        return Center(
-          child: Padding(
-            padding: mazePadding,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: borderColor, width: borderThickness),
-              ),
-              child: _SizedMaze(
-                rows: rows,
-                columns: columns,
-                innerHeight: innerHeight,
-                innerWidth: innerWidth,
-                borderColor: borderColor,
-                borderThickness: borderThickness,
-                gamePieceColor: gamePieceColor,
-                gamePieceLocation: gamePieceLocation,
-                gridColor: gridColor,
-                wallsColor: wallsColor,
-                wallLocations: wallLocations,
+        final double leftOffset = (constraints.maxWidth - mazeWidth) / 2;
+        final double topOffset = (constraints.maxHeight - mazeHeight) / 1.5;
+        final double bottomOffset = (constraints.maxHeight - mazeHeight) / 3;
+
+        return Stack(
+          children: <Widget>[
+            Positioned(
+              left: leftOffset,
+              top: 0,
+              width: mazeWidth,
+              height: constraints.maxHeight - mazeHeight - bottomOffset,
+              child: MazeControlPanel(
+                activePlayers: activePlayers,
+                sizeMultiplier: constraints.maxWidth / defaultWindowWidth,
               ),
             ),
-          ),
+            Positioned(
+              left: leftOffset,
+              width: mazeWidth,
+              height: mazeHeight,
+              top: topOffset,
+              child: Container(
+                decoration: BoxDecoration(
+                  border:
+                      Border.all(color: borderColor, width: borderThickness),
+                ),
+                child: _SizedMaze(
+                  rows: rows,
+                  columns: columns,
+                  innerHeight: innerHeight,
+                  innerWidth: innerWidth,
+                  borderColor: borderColor,
+                  borderThickness: borderThickness,
+                  gamePieceColor: gamePieceColor,
+                  gamePieceLocation: gamePieceLocation,
+                  gridColor: gridColor,
+                  wallsColor: wallsColor,
+                  wallLocations: wallLocations,
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

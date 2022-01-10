@@ -44,6 +44,7 @@ class MazeManager extends StateNotifier<MazeData> {
     }
 
     return MazeData(
+      activePlayers: 1,
       playerLocation: playerLocation,
       targetLocation: targetLocation,
       wallLocations: wallLocations,

@@ -16,6 +16,7 @@ class MazePage extends ConsumerWidget {
       body: MoveCommandKeyboardListener(
         sendCommand: ref.read(mazeManagerProvider.notifier).send,
         child: Maze(
+          activePlayers: mazeData.activePlayers,
           rows: mazeData.rows,
           columns: mazeData.columns,
           borderColor: Colors.blue,

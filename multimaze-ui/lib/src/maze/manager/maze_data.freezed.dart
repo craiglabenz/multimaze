@@ -23,13 +23,15 @@ class _$MazeDataTearOff {
       required Coordinates targetLocation,
       required List<Coordinates> wallLocations,
       required int rows,
-      required int columns}) {
+      required int columns,
+      required int activePlayers}) {
     return _MazeData(
       playerLocation: playerLocation,
       targetLocation: targetLocation,
       wallLocations: wallLocations,
       rows: rows,
       columns: columns,
+      activePlayers: activePlayers,
     );
   }
 }
@@ -44,6 +46,7 @@ mixin _$MazeData {
   List<Coordinates> get wallLocations => throw _privateConstructorUsedError;
   int get rows => throw _privateConstructorUsedError;
   int get columns => throw _privateConstructorUsedError;
+  int get activePlayers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MazeDataCopyWith<MazeData> get copyWith =>
@@ -59,7 +62,8 @@ abstract class $MazeDataCopyWith<$Res> {
       Coordinates targetLocation,
       List<Coordinates> wallLocations,
       int rows,
-      int columns});
+      int columns,
+      int activePlayers});
 
   $CoordinatesCopyWith<$Res> get playerLocation;
   $CoordinatesCopyWith<$Res> get targetLocation;
@@ -80,6 +84,7 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
     Object? wallLocations = freezed,
     Object? rows = freezed,
     Object? columns = freezed,
+    Object? activePlayers = freezed,
   }) {
     return _then(_value.copyWith(
       playerLocation: playerLocation == freezed
@@ -101,6 +106,10 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
       columns: columns == freezed
           ? _value.columns
           : columns // ignore: cast_nullable_to_non_nullable
+              as int,
+      activePlayers: activePlayers == freezed
+          ? _value.activePlayers
+          : activePlayers // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -130,7 +139,8 @@ abstract class _$MazeDataCopyWith<$Res> implements $MazeDataCopyWith<$Res> {
       Coordinates targetLocation,
       List<Coordinates> wallLocations,
       int rows,
-      int columns});
+      int columns,
+      int activePlayers});
 
   @override
   $CoordinatesCopyWith<$Res> get playerLocation;
@@ -154,6 +164,7 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
     Object? wallLocations = freezed,
     Object? rows = freezed,
     Object? columns = freezed,
+    Object? activePlayers = freezed,
   }) {
     return _then(_MazeData(
       playerLocation: playerLocation == freezed
@@ -176,6 +187,10 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
           ? _value.columns
           : columns // ignore: cast_nullable_to_non_nullable
               as int,
+      activePlayers: activePlayers == freezed
+          ? _value.activePlayers
+          : activePlayers // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -188,7 +203,8 @@ class _$_MazeData implements _MazeData {
       required this.targetLocation,
       required this.wallLocations,
       required this.rows,
-      required this.columns});
+      required this.columns,
+      required this.activePlayers});
 
   @override
   final Coordinates playerLocation;
@@ -200,10 +216,12 @@ class _$_MazeData implements _MazeData {
   final int rows;
   @override
   final int columns;
+  @override
+  final int activePlayers;
 
   @override
   String toString() {
-    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, wallLocations: $wallLocations, rows: $rows, columns: $columns)';
+    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, wallLocations: $wallLocations, rows: $rows, columns: $columns, activePlayers: $activePlayers)';
   }
 
   @override
@@ -218,7 +236,9 @@ class _$_MazeData implements _MazeData {
             const DeepCollectionEquality()
                 .equals(other.wallLocations, wallLocations) &&
             const DeepCollectionEquality().equals(other.rows, rows) &&
-            const DeepCollectionEquality().equals(other.columns, columns));
+            const DeepCollectionEquality().equals(other.columns, columns) &&
+            const DeepCollectionEquality()
+                .equals(other.activePlayers, activePlayers));
   }
 
   @override
@@ -228,7 +248,8 @@ class _$_MazeData implements _MazeData {
       const DeepCollectionEquality().hash(targetLocation),
       const DeepCollectionEquality().hash(wallLocations),
       const DeepCollectionEquality().hash(rows),
-      const DeepCollectionEquality().hash(columns));
+      const DeepCollectionEquality().hash(columns),
+      const DeepCollectionEquality().hash(activePlayers));
 
   @JsonKey(ignore: true)
   @override
@@ -242,7 +263,8 @@ abstract class _MazeData implements MazeData {
       required Coordinates targetLocation,
       required List<Coordinates> wallLocations,
       required int rows,
-      required int columns}) = _$_MazeData;
+      required int columns,
+      required int activePlayers}) = _$_MazeData;
 
   @override
   Coordinates get playerLocation;
@@ -254,6 +276,8 @@ abstract class _MazeData implements MazeData {
   int get rows;
   @override
   int get columns;
+  @override
+  int get activePlayers;
   @override
   @JsonKey(ignore: true)
   _$MazeDataCopyWith<_MazeData> get copyWith =>
