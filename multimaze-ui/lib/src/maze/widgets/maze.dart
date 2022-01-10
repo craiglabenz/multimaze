@@ -14,6 +14,7 @@ class Maze extends StatelessWidget {
     required this.gamePieceLocation,
     required this.wallLocations,
     required this.activePlayers,
+    required this.lastCommand,
     this.gamePieceColor = Colors.pink,
     this.borderColor = Colors.blue,
     this.gridColor = Colors.blue,
@@ -64,6 +65,11 @@ class Maze extends StatelessWidget {
   ///
   /// This is for display purposes only and has no other effect on the UI.
   final int activePlayers;
+
+  /// The last successful command issued in the game.
+  ///
+  /// Should only be `null` at the start of a new game.
+  final IndexedCommand? lastCommand;
 
   /// The location on the board where the game piece should be drawn.
   final Coordinates gamePieceLocation;
@@ -119,6 +125,7 @@ class Maze extends StatelessWidget {
               child: MazeControlPanel(
                 activePlayers: activePlayers,
                 sizeMultiplier: constraints.maxWidth / defaultWindowWidth,
+                lastCommand: lastCommand,
               ),
             ),
             Positioned(

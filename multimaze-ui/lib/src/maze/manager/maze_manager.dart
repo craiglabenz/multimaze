@@ -73,7 +73,14 @@ class MazeManager extends StateNotifier<MazeData> {
       // Nothing to do here. The game silently discards moves into walls.
       return;
     }
-    state = state.copyWith(playerLocation: newLocation);
+    state = state.copyWith(
+      lastCommand: IndexedCommand(
+        command: command,
+        moveNumber:
+            state.lastCommand == null ? 1 : state.lastCommand!.moveNumber + 1,
+      ),
+      playerLocation: newLocation,
+    );
   }
 }
 

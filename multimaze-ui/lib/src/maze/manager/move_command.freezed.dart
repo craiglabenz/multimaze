@@ -128,8 +128,8 @@ class _$MoveCommandUpCopyWithImpl<$Res> extends _$MoveCommandCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MoveCommandUp implements MoveCommandUp {
-  const _$MoveCommandUp();
+class _$MoveCommandUp extends MoveCommandUp {
+  const _$MoveCommandUp() : super._();
 
   @override
   String toString() {
@@ -220,8 +220,9 @@ class _$MoveCommandUp implements MoveCommandUp {
   }
 }
 
-abstract class MoveCommandUp implements MoveCommand {
+abstract class MoveCommandUp extends MoveCommand {
   const factory MoveCommandUp() = _$MoveCommandUp;
+  const MoveCommandUp._() : super._();
 }
 
 /// @nodoc
@@ -245,8 +246,8 @@ class _$MoveCommandDownCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MoveCommandDown implements MoveCommandDown {
-  const _$MoveCommandDown();
+class _$MoveCommandDown extends MoveCommandDown {
+  const _$MoveCommandDown() : super._();
 
   @override
   String toString() {
@@ -337,8 +338,9 @@ class _$MoveCommandDown implements MoveCommandDown {
   }
 }
 
-abstract class MoveCommandDown implements MoveCommand {
+abstract class MoveCommandDown extends MoveCommand {
   const factory MoveCommandDown() = _$MoveCommandDown;
+  const MoveCommandDown._() : super._();
 }
 
 /// @nodoc
@@ -362,8 +364,8 @@ class _$MoveCommandLeftCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MoveCommandLeft implements MoveCommandLeft {
-  const _$MoveCommandLeft();
+class _$MoveCommandLeft extends MoveCommandLeft {
+  const _$MoveCommandLeft() : super._();
 
   @override
   String toString() {
@@ -454,8 +456,9 @@ class _$MoveCommandLeft implements MoveCommandLeft {
   }
 }
 
-abstract class MoveCommandLeft implements MoveCommand {
+abstract class MoveCommandLeft extends MoveCommand {
   const factory MoveCommandLeft() = _$MoveCommandLeft;
+  const MoveCommandLeft._() : super._();
 }
 
 /// @nodoc
@@ -479,8 +482,8 @@ class _$MoveCommandRightCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MoveCommandRight implements MoveCommandRight {
-  const _$MoveCommandRight();
+class _$MoveCommandRight extends MoveCommandRight {
+  const _$MoveCommandRight() : super._();
 
   @override
   String toString() {
@@ -571,6 +574,170 @@ class _$MoveCommandRight implements MoveCommandRight {
   }
 }
 
-abstract class MoveCommandRight implements MoveCommand {
+abstract class MoveCommandRight extends MoveCommand {
   const factory MoveCommandRight() = _$MoveCommandRight;
+  const MoveCommandRight._() : super._();
+}
+
+/// @nodoc
+class _$IndexedCommandTearOff {
+  const _$IndexedCommandTearOff();
+
+  _IndexCommand call({required MoveCommand command, required int moveNumber}) {
+    return _IndexCommand(
+      command: command,
+      moveNumber: moveNumber,
+    );
+  }
+}
+
+/// @nodoc
+const $IndexedCommand = _$IndexedCommandTearOff();
+
+/// @nodoc
+mixin _$IndexedCommand {
+  MoveCommand get command => throw _privateConstructorUsedError;
+  int get moveNumber => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $IndexedCommandCopyWith<IndexedCommand> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $IndexedCommandCopyWith<$Res> {
+  factory $IndexedCommandCopyWith(
+          IndexedCommand value, $Res Function(IndexedCommand) then) =
+      _$IndexedCommandCopyWithImpl<$Res>;
+  $Res call({MoveCommand command, int moveNumber});
+
+  $MoveCommandCopyWith<$Res> get command;
+}
+
+/// @nodoc
+class _$IndexedCommandCopyWithImpl<$Res>
+    implements $IndexedCommandCopyWith<$Res> {
+  _$IndexedCommandCopyWithImpl(this._value, this._then);
+
+  final IndexedCommand _value;
+  // ignore: unused_field
+  final $Res Function(IndexedCommand) _then;
+
+  @override
+  $Res call({
+    Object? command = freezed,
+    Object? moveNumber = freezed,
+  }) {
+    return _then(_value.copyWith(
+      command: command == freezed
+          ? _value.command
+          : command // ignore: cast_nullable_to_non_nullable
+              as MoveCommand,
+      moveNumber: moveNumber == freezed
+          ? _value.moveNumber
+          : moveNumber // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+
+  @override
+  $MoveCommandCopyWith<$Res> get command {
+    return $MoveCommandCopyWith<$Res>(_value.command, (value) {
+      return _then(_value.copyWith(command: value));
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$IndexCommandCopyWith<$Res>
+    implements $IndexedCommandCopyWith<$Res> {
+  factory _$IndexCommandCopyWith(
+          _IndexCommand value, $Res Function(_IndexCommand) then) =
+      __$IndexCommandCopyWithImpl<$Res>;
+  @override
+  $Res call({MoveCommand command, int moveNumber});
+
+  @override
+  $MoveCommandCopyWith<$Res> get command;
+}
+
+/// @nodoc
+class __$IndexCommandCopyWithImpl<$Res>
+    extends _$IndexedCommandCopyWithImpl<$Res>
+    implements _$IndexCommandCopyWith<$Res> {
+  __$IndexCommandCopyWithImpl(
+      _IndexCommand _value, $Res Function(_IndexCommand) _then)
+      : super(_value, (v) => _then(v as _IndexCommand));
+
+  @override
+  _IndexCommand get _value => super._value as _IndexCommand;
+
+  @override
+  $Res call({
+    Object? command = freezed,
+    Object? moveNumber = freezed,
+  }) {
+    return _then(_IndexCommand(
+      command: command == freezed
+          ? _value.command
+          : command // ignore: cast_nullable_to_non_nullable
+              as MoveCommand,
+      moveNumber: moveNumber == freezed
+          ? _value.moveNumber
+          : moveNumber // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_IndexCommand implements _IndexCommand {
+  const _$_IndexCommand({required this.command, required this.moveNumber});
+
+  @override
+  final MoveCommand command;
+  @override
+  final int moveNumber;
+
+  @override
+  String toString() {
+    return 'IndexedCommand(command: $command, moveNumber: $moveNumber)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _IndexCommand &&
+            const DeepCollectionEquality().equals(other.command, command) &&
+            const DeepCollectionEquality()
+                .equals(other.moveNumber, moveNumber));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(command),
+      const DeepCollectionEquality().hash(moveNumber));
+
+  @JsonKey(ignore: true)
+  @override
+  _$IndexCommandCopyWith<_IndexCommand> get copyWith =>
+      __$IndexCommandCopyWithImpl<_IndexCommand>(this, _$identity);
+}
+
+abstract class _IndexCommand implements IndexedCommand {
+  const factory _IndexCommand(
+      {required MoveCommand command,
+      required int moveNumber}) = _$_IndexCommand;
+
+  @override
+  MoveCommand get command;
+  @override
+  int get moveNumber;
+  @override
+  @JsonKey(ignore: true)
+  _$IndexCommandCopyWith<_IndexCommand> get copyWith =>
+      throw _privateConstructorUsedError;
 }

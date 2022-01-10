@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:multimaze/src/maze/helpers/helpers.dart';
+import 'move_command.dart';
 
 part 'maze_data.freezed.dart';
 
@@ -12,6 +13,7 @@ class MazeData with _$MazeData {
     required int rows,
     required int columns,
     required int activePlayers,
+    IndexedCommand? lastCommand,
   }) = _MazeData;
 
   static const rawEmptySquare = ' ';

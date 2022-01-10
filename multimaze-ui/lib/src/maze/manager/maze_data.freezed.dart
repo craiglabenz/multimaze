@@ -24,7 +24,8 @@ class _$MazeDataTearOff {
       required List<Coordinates> wallLocations,
       required int rows,
       required int columns,
-      required int activePlayers}) {
+      required int activePlayers,
+      IndexedCommand? lastCommand}) {
     return _MazeData(
       playerLocation: playerLocation,
       targetLocation: targetLocation,
@@ -32,6 +33,7 @@ class _$MazeDataTearOff {
       rows: rows,
       columns: columns,
       activePlayers: activePlayers,
+      lastCommand: lastCommand,
     );
   }
 }
@@ -47,6 +49,7 @@ mixin _$MazeData {
   int get rows => throw _privateConstructorUsedError;
   int get columns => throw _privateConstructorUsedError;
   int get activePlayers => throw _privateConstructorUsedError;
+  IndexedCommand? get lastCommand => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MazeDataCopyWith<MazeData> get copyWith =>
@@ -63,10 +66,12 @@ abstract class $MazeDataCopyWith<$Res> {
       List<Coordinates> wallLocations,
       int rows,
       int columns,
-      int activePlayers});
+      int activePlayers,
+      IndexedCommand? lastCommand});
 
   $CoordinatesCopyWith<$Res> get playerLocation;
   $CoordinatesCopyWith<$Res> get targetLocation;
+  $IndexedCommandCopyWith<$Res>? get lastCommand;
 }
 
 /// @nodoc
@@ -85,6 +90,7 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
     Object? rows = freezed,
     Object? columns = freezed,
     Object? activePlayers = freezed,
+    Object? lastCommand = freezed,
   }) {
     return _then(_value.copyWith(
       playerLocation: playerLocation == freezed
@@ -111,6 +117,10 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
           ? _value.activePlayers
           : activePlayers // ignore: cast_nullable_to_non_nullable
               as int,
+      lastCommand: lastCommand == freezed
+          ? _value.lastCommand
+          : lastCommand // ignore: cast_nullable_to_non_nullable
+              as IndexedCommand?,
     ));
   }
 
@@ -127,6 +137,17 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
       return _then(_value.copyWith(targetLocation: value));
     });
   }
+
+  @override
+  $IndexedCommandCopyWith<$Res>? get lastCommand {
+    if (_value.lastCommand == null) {
+      return null;
+    }
+
+    return $IndexedCommandCopyWith<$Res>(_value.lastCommand!, (value) {
+      return _then(_value.copyWith(lastCommand: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -140,12 +161,15 @@ abstract class _$MazeDataCopyWith<$Res> implements $MazeDataCopyWith<$Res> {
       List<Coordinates> wallLocations,
       int rows,
       int columns,
-      int activePlayers});
+      int activePlayers,
+      IndexedCommand? lastCommand});
 
   @override
   $CoordinatesCopyWith<$Res> get playerLocation;
   @override
   $CoordinatesCopyWith<$Res> get targetLocation;
+  @override
+  $IndexedCommandCopyWith<$Res>? get lastCommand;
 }
 
 /// @nodoc
@@ -165,6 +189,7 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
     Object? rows = freezed,
     Object? columns = freezed,
     Object? activePlayers = freezed,
+    Object? lastCommand = freezed,
   }) {
     return _then(_MazeData(
       playerLocation: playerLocation == freezed
@@ -191,6 +216,10 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
           ? _value.activePlayers
           : activePlayers // ignore: cast_nullable_to_non_nullable
               as int,
+      lastCommand: lastCommand == freezed
+          ? _value.lastCommand
+          : lastCommand // ignore: cast_nullable_to_non_nullable
+              as IndexedCommand?,
     ));
   }
 }
@@ -204,7 +233,8 @@ class _$_MazeData implements _MazeData {
       required this.wallLocations,
       required this.rows,
       required this.columns,
-      required this.activePlayers});
+      required this.activePlayers,
+      this.lastCommand});
 
   @override
   final Coordinates playerLocation;
@@ -218,10 +248,12 @@ class _$_MazeData implements _MazeData {
   final int columns;
   @override
   final int activePlayers;
+  @override
+  final IndexedCommand? lastCommand;
 
   @override
   String toString() {
-    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, wallLocations: $wallLocations, rows: $rows, columns: $columns, activePlayers: $activePlayers)';
+    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, wallLocations: $wallLocations, rows: $rows, columns: $columns, activePlayers: $activePlayers, lastCommand: $lastCommand)';
   }
 
   @override
@@ -238,7 +270,9 @@ class _$_MazeData implements _MazeData {
             const DeepCollectionEquality().equals(other.rows, rows) &&
             const DeepCollectionEquality().equals(other.columns, columns) &&
             const DeepCollectionEquality()
-                .equals(other.activePlayers, activePlayers));
+                .equals(other.activePlayers, activePlayers) &&
+            const DeepCollectionEquality()
+                .equals(other.lastCommand, lastCommand));
   }
 
   @override
@@ -249,7 +283,8 @@ class _$_MazeData implements _MazeData {
       const DeepCollectionEquality().hash(wallLocations),
       const DeepCollectionEquality().hash(rows),
       const DeepCollectionEquality().hash(columns),
-      const DeepCollectionEquality().hash(activePlayers));
+      const DeepCollectionEquality().hash(activePlayers),
+      const DeepCollectionEquality().hash(lastCommand));
 
   @JsonKey(ignore: true)
   @override
@@ -264,7 +299,8 @@ abstract class _MazeData implements MazeData {
       required List<Coordinates> wallLocations,
       required int rows,
       required int columns,
-      required int activePlayers}) = _$_MazeData;
+      required int activePlayers,
+      IndexedCommand? lastCommand}) = _$_MazeData;
 
   @override
   Coordinates get playerLocation;
@@ -278,6 +314,8 @@ abstract class _MazeData implements MazeData {
   int get columns;
   @override
   int get activePlayers;
+  @override
+  IndexedCommand? get lastCommand;
   @override
   @JsonKey(ignore: true)
   _$MazeDataCopyWith<_MazeData> get copyWith =>
