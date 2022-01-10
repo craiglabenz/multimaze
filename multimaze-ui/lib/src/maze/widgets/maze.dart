@@ -18,7 +18,7 @@ class Maze extends StatelessWidget {
     this.gridColor = Colors.blue,
     this.wallsColor = Colors.black,
     this.borderThickness = 1.0,
-    this.paddingOnConstrainedSide = 0.1,
+    this.paddingOnConstrainedSide = 0.2,
   })  : assert(paddingOnConstrainedSide >= 0),
         assert(paddingOnConstrainedSide <= 1),
         super(key: key);
@@ -96,9 +96,11 @@ class Maze extends StatelessWidget {
         // widget.
         final double mazeWidth = columns * squareSize;
 
-        final EdgeInsets mazePadding = EdgeInsets.symmetric(
-          horizontal: (constraints.maxWidth - mazeWidth) / 2,
-          vertical: (constraints.maxHeight - mazeHeight) / 2,
+        final EdgeInsets mazePadding = EdgeInsets.fromLTRB(
+          (constraints.maxWidth - mazeWidth) / 2,
+          (constraints.maxHeight - mazeHeight) / 1.5,
+          (constraints.maxWidth - mazeWidth) / 2,
+          (constraints.maxHeight - mazeHeight) / 3,
         );
 
         final double innerHeight = mazeHeight - (2 * borderThickness);
