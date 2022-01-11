@@ -13,6 +13,7 @@ class MazeData with _$MazeData {
     required int rows,
     required int columns,
     required int activePlayers,
+    required DateTime startTime,
     IndexedCommand? lastCommand,
   }) = _MazeData;
 

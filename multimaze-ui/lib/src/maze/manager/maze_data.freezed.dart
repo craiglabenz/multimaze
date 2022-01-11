@@ -25,6 +25,7 @@ class _$MazeDataTearOff {
       required int rows,
       required int columns,
       required int activePlayers,
+      required DateTime startTime,
       IndexedCommand? lastCommand}) {
     return _MazeData(
       playerLocation: playerLocation,
@@ -33,6 +34,7 @@ class _$MazeDataTearOff {
       rows: rows,
       columns: columns,
       activePlayers: activePlayers,
+      startTime: startTime,
       lastCommand: lastCommand,
     );
   }
@@ -49,6 +51,7 @@ mixin _$MazeData {
   int get rows => throw _privateConstructorUsedError;
   int get columns => throw _privateConstructorUsedError;
   int get activePlayers => throw _privateConstructorUsedError;
+  DateTime get startTime => throw _privateConstructorUsedError;
   IndexedCommand? get lastCommand => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -67,6 +70,7 @@ abstract class $MazeDataCopyWith<$Res> {
       int rows,
       int columns,
       int activePlayers,
+      DateTime startTime,
       IndexedCommand? lastCommand});
 
   $CoordinatesCopyWith<$Res> get playerLocation;
@@ -90,6 +94,7 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
     Object? rows = freezed,
     Object? columns = freezed,
     Object? activePlayers = freezed,
+    Object? startTime = freezed,
     Object? lastCommand = freezed,
   }) {
     return _then(_value.copyWith(
@@ -117,6 +122,10 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
           ? _value.activePlayers
           : activePlayers // ignore: cast_nullable_to_non_nullable
               as int,
+      startTime: startTime == freezed
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       lastCommand: lastCommand == freezed
           ? _value.lastCommand
           : lastCommand // ignore: cast_nullable_to_non_nullable
@@ -162,6 +171,7 @@ abstract class _$MazeDataCopyWith<$Res> implements $MazeDataCopyWith<$Res> {
       int rows,
       int columns,
       int activePlayers,
+      DateTime startTime,
       IndexedCommand? lastCommand});
 
   @override
@@ -189,6 +199,7 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
     Object? rows = freezed,
     Object? columns = freezed,
     Object? activePlayers = freezed,
+    Object? startTime = freezed,
     Object? lastCommand = freezed,
   }) {
     return _then(_MazeData(
@@ -216,6 +227,10 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
           ? _value.activePlayers
           : activePlayers // ignore: cast_nullable_to_non_nullable
               as int,
+      startTime: startTime == freezed
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       lastCommand: lastCommand == freezed
           ? _value.lastCommand
           : lastCommand // ignore: cast_nullable_to_non_nullable
@@ -234,6 +249,7 @@ class _$_MazeData implements _MazeData {
       required this.rows,
       required this.columns,
       required this.activePlayers,
+      required this.startTime,
       this.lastCommand});
 
   @override
@@ -249,11 +265,13 @@ class _$_MazeData implements _MazeData {
   @override
   final int activePlayers;
   @override
+  final DateTime startTime;
+  @override
   final IndexedCommand? lastCommand;
 
   @override
   String toString() {
-    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, wallLocations: $wallLocations, rows: $rows, columns: $columns, activePlayers: $activePlayers, lastCommand: $lastCommand)';
+    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, wallLocations: $wallLocations, rows: $rows, columns: $columns, activePlayers: $activePlayers, startTime: $startTime, lastCommand: $lastCommand)';
   }
 
   @override
@@ -271,6 +289,7 @@ class _$_MazeData implements _MazeData {
             const DeepCollectionEquality().equals(other.columns, columns) &&
             const DeepCollectionEquality()
                 .equals(other.activePlayers, activePlayers) &&
+            const DeepCollectionEquality().equals(other.startTime, startTime) &&
             const DeepCollectionEquality()
                 .equals(other.lastCommand, lastCommand));
   }
@@ -284,6 +303,7 @@ class _$_MazeData implements _MazeData {
       const DeepCollectionEquality().hash(rows),
       const DeepCollectionEquality().hash(columns),
       const DeepCollectionEquality().hash(activePlayers),
+      const DeepCollectionEquality().hash(startTime),
       const DeepCollectionEquality().hash(lastCommand));
 
   @JsonKey(ignore: true)
@@ -300,6 +320,7 @@ abstract class _MazeData implements MazeData {
       required int rows,
       required int columns,
       required int activePlayers,
+      required DateTime startTime,
       IndexedCommand? lastCommand}) = _$_MazeData;
 
   @override
@@ -314,6 +335,8 @@ abstract class _MazeData implements MazeData {
   int get columns;
   @override
   int get activePlayers;
+  @override
+  DateTime get startTime;
   @override
   IndexedCommand? get lastCommand;
   @override

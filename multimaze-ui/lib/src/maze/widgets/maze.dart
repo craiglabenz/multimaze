@@ -15,6 +15,7 @@ class Maze extends StatelessWidget {
     required this.wallLocations,
     required this.activePlayers,
     required this.lastCommand,
+    required this.startTime,
     this.gamePieceColor = Colors.pink,
     this.borderColor = Colors.blue,
     this.gridColor = Colors.blue,
@@ -65,6 +66,9 @@ class Maze extends StatelessWidget {
   ///
   /// This is for display purposes only and has no other effect on the UI.
   final int activePlayers;
+
+  /// The time at which this game starts and commands will be accepted, in UTC.
+  final DateTime startTime;
 
   /// The last successful command issued in the game.
   ///
@@ -124,8 +128,9 @@ class Maze extends StatelessWidget {
               height: constraints.maxHeight - mazeHeight - bottomOffset,
               child: MazeControlPanel(
                 activePlayers: activePlayers,
-                sizeMultiplier: constraints.maxWidth / defaultWindowWidth,
                 lastCommand: lastCommand,
+                startTime: startTime,
+                sizeMultiplier: constraints.maxWidth / defaultWindowWidth,
               ),
             ),
             Positioned(

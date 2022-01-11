@@ -24,6 +24,7 @@ class MazePage extends ConsumerWidget {
           gridColor: Colors.grey[50]!,
           borderThickness: 1,
           gamePieceLocation: mazeData.playerLocation,
+          startTime: mazeData.startTime,
           wallLocations: mazeData.wallLocations,
         ),
       ),

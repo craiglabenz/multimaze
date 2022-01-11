@@ -48,6 +48,7 @@ class MazeManager extends StateNotifier<MazeData> {
       playerLocation: playerLocation,
       targetLocation: targetLocation,
       wallLocations: wallLocations,
+      startTime: DateTime.now().toUtc().add(const Duration(seconds: 3)),
       columns: rawMaze.first.length,
       rows: rawMaze.length,
     );

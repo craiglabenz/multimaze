@@ -7,11 +7,13 @@ class MazeControlPanel extends StatelessWidget {
     required this.activePlayers,
     required this.lastCommand,
     required this.sizeMultiplier,
+    required this.startTime,
   }) : super(key: key);
 
   final int activePlayers;
   final double sizeMultiplier;
   final IndexedCommand? lastCommand;
+  final DateTime startTime;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +28,43 @@ class MazeControlPanel extends StatelessWidget {
         ),
         Positioned(
           right: 0,
+          top: 0,
           bottom: 0,
-          height: 50 * sizeMultiplier,
-          child: Text(
-            'Active Players: $activePlayers',
-            style: Theme.of(context).textTheme.headline4!.copyWith(
-                  fontSize: 32 * sizeMultiplier,
-                ),
+          child: _MetaGameState(
+            activePlayers: activePlayers,
+            sizeMultiplier: sizeMultiplier,
+            startTime: startTime,
           ),
+        )
+      ],
+    );
+  }
+}
+
+class _MetaGameState extends StatelessWidget {
+  const _MetaGameState({
+    Key? key,
+    required this.activePlayers,
+    required this.sizeMultiplier,
+    required this.startTime,
+  }) : super(key: key);
+
+  final int activePlayers;
+  final double sizeMultiplier;
+  final DateTime startTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        GameClock(startTime, fontSize: 32 * sizeMultiplier),
+        Text(
+          'Active Players: $activePlayers',
+          style: Theme.of(context).textTheme.headline4!.copyWith(
+                fontSize: 32 * sizeMultiplier,
+              ),
         )
       ],
     );
