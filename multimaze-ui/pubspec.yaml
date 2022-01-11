@@ -28,6 +28,8 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.2
+  firebase_core: ^1.11.0
+  firebase_database: ^9.0.5
   flutter:
     sdk: flutter
   flutter_riverpod: ^1.0.3

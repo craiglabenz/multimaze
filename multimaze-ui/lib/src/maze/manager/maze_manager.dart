@@ -1,8 +1,27 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:multimaze/src/maze/maze.dart';
 import 'package:riverpod/riverpod.dart';
 
 class MazeManager extends StateNotifier<MazeData> {
-  MazeManager() : super(parseMaze(rawMaze));
+  MazeManager() : super(parseMaze(rawMaze)) {
+    // Dart implementation of https://firebase.google.com/docs/database/android/offline-capabilities#section-sample
+    FirebaseDatabase database = FirebaseDatabase.instance;  
+    database.ref('.info/connected').onValue.listen((event) {
+      if (event.snapshot.value == true) {
+        var connectionRef = database.ref('connections').push();
+        connectionRef.onDisconnect().remove();
+        connectionRef.set(true);
+      }
+    });
+    database.ref('connections').onValue.listen((event) {
+      var playerCount = event.snapshot.children.length;
+      state = state.copyWith(
+        activePlayers: playerCount
+      );      
+    });
+    // TODO: listen to position from server
+    
+  }
 
   static void validateRawMazeDimensions(List<String> rawMaze) {
     int rowNumber = 1;
@@ -57,6 +76,10 @@ class MazeManager extends StateNotifier<MazeData> {
   void send(MoveCommand command) {
     final oldX = state.playerLocation.x;
     final oldY = state.playerLocation.y;
+    // TODO: send new state to RTDB
+    // database.ref('location').set({
+    //   'x': ServerValue.increment(1),
+    // });
     final newLocation = command.map(
       up: (_) => Coordinates(x: oldX, y: oldY + 1),
       down: (_) => Coordinates(x: oldX, y: oldY - 1),
