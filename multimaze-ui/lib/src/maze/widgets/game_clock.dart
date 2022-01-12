@@ -34,11 +34,13 @@ class _GameClockState extends State<GameClock> {
       });
     }
 
-    /// Check every 100ms
-    Future.delayed(
-      const Duration(milliseconds: 100),
-      updateClockAndRescheduleClock,
-    );
+    if (mounted) {
+      /// Check every 100ms
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        updateClockAndRescheduleClock,
+      );
+    }
   }
 
   String get clockDisplay {
@@ -46,6 +48,8 @@ class _GameClockState extends State<GameClock> {
       final minutes = gameSeconds ~/ 60;
       final seconds = gameSeconds % 60;
       return '${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}';
+    } else if (gameSeconds == 0) {
+      return 'STARTS IN 0';
     } else {
       return 'STARTS IN ${gameSeconds * -1}';
     }
