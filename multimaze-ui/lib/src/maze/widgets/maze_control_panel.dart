@@ -6,10 +6,12 @@ class MazeControlPanel extends StatelessWidget {
     Key? key,
     required this.playerCount,
     required this.lastCommand,
+    required this.isGameCompleted,
     required this.sizeMultiplier,
     required this.startTime,
   }) : super(key: key);
 
+  final bool isGameCompleted;
   final int playerCount;
   final double sizeMultiplier;
   final IndexedCommand? lastCommand;
@@ -31,6 +33,7 @@ class MazeControlPanel extends StatelessWidget {
           top: 0,
           bottom: 0,
           child: _MetaGameState(
+            isGameCompleted: isGameCompleted,
             playerCount: playerCount,
             sizeMultiplier: sizeMultiplier,
             startTime: startTime,
@@ -44,11 +47,13 @@ class MazeControlPanel extends StatelessWidget {
 class _MetaGameState extends StatelessWidget {
   const _MetaGameState({
     Key? key,
+    required this.isGameCompleted,
     required this.playerCount,
     required this.sizeMultiplier,
     required this.startTime,
   }) : super(key: key);
 
+  final bool isGameCompleted;
   final int playerCount;
   final double sizeMultiplier;
   final DateTime startTime;
@@ -59,7 +64,11 @@ class _MetaGameState extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        GameClock(startTime, fontSize: 32 * sizeMultiplier),
+        GameClock(
+          startTime,
+          fontSize: 32 * sizeMultiplier,
+          isRunning: !isGameCompleted,
+        ),
         Text(
           'Active Players: $playerCount',
           style: Theme.of(context).textTheme.headline4!.copyWith(

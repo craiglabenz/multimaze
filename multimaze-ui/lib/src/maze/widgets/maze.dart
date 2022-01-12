@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:multimaze/src/maze/maze.dart';
 
@@ -61,6 +62,8 @@ class Maze extends StatelessWidget {
               width: mazeWidth,
               height: constraints.maxHeight - mazeHeight - bottomOffset,
               child: MazeControlPanel(
+                isGameCompleted:
+                    mazeData.playerLocation == mazeData.targetLocation,
                 playerCount: mazeData.playerCount,
                 lastCommand: mazeData.lastCommand,
                 startTime: mazeData.startTime,
@@ -177,13 +180,76 @@ class _SizedMaze extends StatelessWidget {
           ),
         ),
         ...wallBlocks,
+        Positioned(
+          left: squareSize * mazeData.targetLocation.x,
+          bottom: squareSize * mazeData.targetLocation.y,
+          child: Container(
+            height: squareSize,
+            width: squareSize,
+            color: theme.targetSquareColor,
+          ),
+        ),
         PlayerIndicator(
           left: gamePieceX + (theme.borderThickness / 4),
           bottom: gamePieceY + (theme.borderThickness / 4),
           size: squareSize - theme.borderThickness,
           color: theme.gamePieceColor,
         ),
+        if (mazeData.playerLocation == mazeData.targetLocation)
+          Positioned(
+            bottom: squareSize * mazeData.targetLocation.y,
+            left: squareSize * mazeData.targetLocation.x,
+            child: const _ConfettiWidget(),
+          )
       ],
     );
+  }
+}
+
+class _ConfettiWidget extends StatefulWidget {
+  const _ConfettiWidget({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _ConfettiWidgetState();
+}
+
+class _ConfettiWidgetState extends State<_ConfettiWidget> {
+  final controller = ConfettiController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => ConfettiWidget(
+        blastDirectionality: BlastDirectionality.explosive,
+        confettiController: controller..play(),
+        createParticlePath: drawStar,
+        shouldLoop: true,
+      );
+
+  Path drawStar(Size size) {
+    // Method to convert degree to radians
+    double degToRad(double deg) => deg * (pi / 180.0);
+
+    const numberOfPoints = 5;
+    final halfWidth = size.width / 2;
+    final externalRadius = halfWidth;
+    final internalRadius = halfWidth / 2.5;
+    final degreesPerStep = degToRad(360 / numberOfPoints);
+    final halfDegreesPerStep = degreesPerStep / 2;
+    final path = Path();
+    final fullAngle = degToRad(360);
+    path.moveTo(size.width, halfWidth);
+
+    for (double step = 0; step < fullAngle; step += degreesPerStep) {
+      path.lineTo(halfWidth + externalRadius * cos(step),
+          halfWidth + externalRadius * sin(step));
+      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+    }
+    path.close();
+    return path;
   }
 }

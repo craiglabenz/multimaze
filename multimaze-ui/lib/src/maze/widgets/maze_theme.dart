@@ -8,6 +8,7 @@ class MazeTheme {
     this.gamePieceColor = Colors.pink,
     this.gridColor = Colors.blue,
     this.paddingOnConstrainedSide = 0.2,
+    this.targetSquareColor = Colors.amber,
     this.wallsColor = Colors.black,
   })  : assert(paddingOnConstrainedSide >= 0),
         assert(paddingOnConstrainedSide <= 1);
@@ -35,6 +36,9 @@ class MazeTheme {
   /// constrained dimension. If the screen is taller than it is wide, then width
   /// is the most constrained dimension.
   final double paddingOnConstrainedSide;
+
+  /// The fill color of the target square.
+  final Color targetSquareColor;
 
   /// The fill color of the board's walls.
   final Color wallsColor;

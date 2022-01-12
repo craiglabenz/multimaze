@@ -5,10 +5,14 @@ class GameClock extends StatefulWidget {
     this.startTime, {
     Key? key,
     required this.fontSize,
+    required this.isRunning,
   }) : super(key: key);
 
   final DateTime startTime;
   final double fontSize;
+
+  /// Used to control whether the clock is ticking.
+  final bool isRunning;
 
   @override
   _GameClockState createState() => _GameClockState();
@@ -26,12 +30,14 @@ class _GameClockState extends State<GameClock> {
   }
 
   void updateClockAndRescheduleClock() {
-    final newGameSeconds =
-        DateTime.now().toUtc().difference(widget.startTime).inSeconds;
-    if (newGameSeconds != gameSeconds) {
-      setState(() {
-        gameSeconds = newGameSeconds;
-      });
+    if (widget.isRunning) {
+      final newGameSeconds =
+          DateTime.now().toUtc().difference(widget.startTime).inSeconds;
+      if (newGameSeconds != gameSeconds) {
+        setState(() {
+          gameSeconds = newGameSeconds;
+        });
+      }
     }
 
     if (mounted) {

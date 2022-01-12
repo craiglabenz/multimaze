@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  confetti: ^0.6.0
   cupertino_icons: ^1.0.2
   firebase_core: ^1.11.0
   firebase_database: ^9.0.5
