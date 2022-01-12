@@ -22,34 +22,37 @@ class _MoveCommandKeyboardListenerState
   final FocusNode focusNode = FocusNode();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Always request focus, so that any time our app has focus at all, it
-    // is returned to this `KeyboardListener`. This is important to keep the app
-    // working after the developer clicks elsewhere in the browser, e.g., the
-    // navigation bar.
-    FocusScope.of(context).requestFocus(focusNode);
+  void initState() {
+    super.initState();
+    HardwareKeyboard.instance.addHandler(onKeyEvent);
+  }
+
+  bool onKeyEvent(KeyEvent event) {
+    if (event is KeyUpEvent) {
+      return false;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      widget.sendCommand(const MoveCommand.up());
+      return true;
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      widget.sendCommand(const MoveCommand.down());
+      return true;
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+      widget.sendCommand(const MoveCommand.left());
+      return true;
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+      widget.sendCommand(const MoveCommand.right());
+      return true;
+    }
+    return false;
   }
 
   @override
-  Widget build(BuildContext context) {
-    return KeyboardListener(
-      focusNode: focusNode,
-      onKeyEvent: (KeyEvent event) {
-        if (event is KeyUpEvent) {
-          return;
-        }
-        if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          widget.sendCommand(const MoveCommand.up());
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-          widget.sendCommand(const MoveCommand.down());
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          widget.sendCommand(const MoveCommand.left());
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-          widget.sendCommand(const MoveCommand.right());
-        }
-      },
-      child: widget.child,
-    );
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(onKeyEvent);
+    super.dispose();
   }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
