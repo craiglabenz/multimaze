@@ -8,25 +8,13 @@ class MazePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final MazeData mazeData = ref.watch(mazeManagerProvider);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('MultiMaze'),
-      ),
-      body: MoveCommandKeyboardListener(
-        sendCommand: ref.read(mazeManagerProvider.notifier).send,
-        child: Maze(
-          activePlayers: mazeData.activePlayers,
-          lastCommand: mazeData.lastCommand,
-          rows: mazeData.rows,
-          columns: mazeData.columns,
-          borderColor: Colors.blue,
-          gridColor: Colors.grey[50]!,
-          borderThickness: 1,
-          gamePieceLocation: mazeData.playerLocation,
-          startTime: mazeData.startTime,
-          wallLocations: mazeData.wallLocations,
+    return MoveCommandKeyboardListener(
+      sendCommand: ref.read(mazeManagerProvider.notifier).send,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('MultiMaze'),
         ),
+        body: Maze(mazeData: ref.watch(mazeManagerProvider)),
       ),
     );
   }

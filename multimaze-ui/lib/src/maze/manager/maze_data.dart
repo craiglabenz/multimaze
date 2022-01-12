@@ -7,14 +7,43 @@ part 'maze_data.freezed.dart';
 @Freezed()
 class MazeData with _$MazeData {
   const factory MazeData({
+    /// The location of the player on the board.
     required Coordinates playerLocation,
+
+    /// The square players are trying to reach.
+    ///
+    /// It should be true that when [playerLocation] == [targetLocation], the
+    /// maze has been escaped.
     required Coordinates targetLocation,
-    required List<Coordinates> wallLocations,
+
+    /// The height of the maze in game squares.
+    ///
+    /// The actual size in pixels will be determined by maximizing this against
+    /// available screen real estate.
     required int rows,
+
+    /// The width of the maze in game squares.
+    ///
+    /// The actual size in pixels will be determined by maximizing this against
+    /// available screen real estate.
     required int columns,
-    required int activePlayers,
-    required DateTime startTime,
+
+    /// The number of active connections to the game.
+    ///
+    /// This is for display purposes only and has no other effect on the UI.
+    required int playerCount,
+
+    /// The last successful command issued in the game.
+    ///
+    /// Should only be `null` at the start of a new game.
     IndexedCommand? lastCommand,
+
+    /// The time at which this game starts and commands will be accepted, in UTC.
+    required DateTime startTime,
+
+    /// Coordinates of game squares that contain impassible walls. These are
+    /// what make the maze a maze instead of an empty field.
+    required List<Coordinates> wallLocations,
   }) = _MazeData;
 
   static const rawEmptySquare = ' ';

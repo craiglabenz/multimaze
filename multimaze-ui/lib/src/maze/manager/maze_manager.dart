@@ -5,7 +5,7 @@ import 'package:riverpod/riverpod.dart';
 class MazeManager extends StateNotifier<MazeData> {
   MazeManager() : super(parseMaze(rawMaze)) {
     // Dart implementation of https://firebase.google.com/docs/database/android/offline-capabilities#section-sample
-    FirebaseDatabase database = FirebaseDatabase.instance;  
+    FirebaseDatabase database = FirebaseDatabase.instance;
     database.ref('.info/connected').onValue.listen((event) {
       if (event.snapshot.value == true) {
         var connectionRef = database.ref('connections').push();
@@ -15,19 +15,16 @@ class MazeManager extends StateNotifier<MazeData> {
     });
     database.ref('connections').onValue.listen((event) {
       var playerCount = event.snapshot.children.length;
-      state = state.copyWith(
-        activePlayers: playerCount
-      );      
+      state = state.copyWith(playerCount: playerCount);
     });
     // listen to position from the database
     database.ref('position').onValue.listen((event) {
       print('Got position snapshot: ${event.snapshot}');
-      var data = event.snapshot.value as Map<String,dynamic>;
+      var data = event.snapshot.value as Map<String, dynamic>;
       print('Got new position: $data');
       // TODO: local client should also validate state?
       state = state.copyWith(
-        playerLocation: Coordinates(x: data['x'], y: data['y'])
-      );
+          playerLocation: Coordinates(x: data['x'], y: data['y']));
     });
   }
 
@@ -71,7 +68,7 @@ class MazeManager extends StateNotifier<MazeData> {
     }
 
     return MazeData(
-      activePlayers: 1,
+      playerCount: 1,
       playerLocation: playerLocation,
       targetLocation: targetLocation,
       wallLocations: wallLocations,

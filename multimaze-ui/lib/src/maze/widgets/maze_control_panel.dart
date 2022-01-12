@@ -4,13 +4,13 @@ import 'package:multimaze/src/maze/maze.dart';
 class MazeControlPanel extends StatelessWidget {
   const MazeControlPanel({
     Key? key,
-    required this.activePlayers,
+    required this.playerCount,
     required this.lastCommand,
     required this.sizeMultiplier,
     required this.startTime,
   }) : super(key: key);
 
-  final int activePlayers;
+  final int playerCount;
   final double sizeMultiplier;
   final IndexedCommand? lastCommand;
   final DateTime startTime;
@@ -31,7 +31,7 @@ class MazeControlPanel extends StatelessWidget {
           top: 0,
           bottom: 0,
           child: _MetaGameState(
-            activePlayers: activePlayers,
+            playerCount: playerCount,
             sizeMultiplier: sizeMultiplier,
             startTime: startTime,
           ),
@@ -44,12 +44,12 @@ class MazeControlPanel extends StatelessWidget {
 class _MetaGameState extends StatelessWidget {
   const _MetaGameState({
     Key? key,
-    required this.activePlayers,
+    required this.playerCount,
     required this.sizeMultiplier,
     required this.startTime,
   }) : super(key: key);
 
-  final int activePlayers;
+  final int playerCount;
   final double sizeMultiplier;
   final DateTime startTime;
 
@@ -61,7 +61,7 @@ class _MetaGameState extends StatelessWidget {
       children: <Widget>[
         GameClock(startTime, fontSize: 32 * sizeMultiplier),
         Text(
-          'Active Players: $activePlayers',
+          'Active Players: $playerCount',
           style: Theme.of(context).textTheme.headline4!.copyWith(
                 fontSize: 32 * sizeMultiplier,
               ),
