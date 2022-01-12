@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multimaze/src/maze/maze.dart';
 
-class MoveCommandKeyboardListener extends StatelessWidget {
+class MoveCommandKeyboardListener extends StatefulWidget {
   const MoveCommandKeyboardListener({
     Key? key,
     required this.child,
@@ -13,24 +13,43 @@ class MoveCommandKeyboardListener extends StatelessWidget {
   final Function(MoveCommand) sendCommand;
 
   @override
+  State<MoveCommandKeyboardListener> createState() =>
+      _MoveCommandKeyboardListenerState();
+}
+
+class _MoveCommandKeyboardListenerState
+    extends State<MoveCommandKeyboardListener> {
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Always request focus, so that any time our app has focus at all, it
+    // is returned to this `KeyboardListener`. This is important to keep the app
+    // working after the developer clicks elsewhere in the browser, e.g., the
+    // navigation bar.
+    FocusScope.of(context).requestFocus(focusNode);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return RawKeyboardListener(
-      focusNode: FocusNode(),
-      onKey: (RawKeyEvent event) {
-        if (event is RawKeyUpEvent) {
+    return KeyboardListener(
+      focusNode: focusNode,
+      onKeyEvent: (KeyEvent event) {
+        if (event is KeyUpEvent) {
           return;
         }
         if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          sendCommand(const MoveCommand.up());
+          widget.sendCommand(const MoveCommand.up());
         } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-          sendCommand(const MoveCommand.down());
+          widget.sendCommand(const MoveCommand.down());
         } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          sendCommand(const MoveCommand.left());
+          widget.sendCommand(const MoveCommand.left());
         } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-          sendCommand(const MoveCommand.right());
+          widget.sendCommand(const MoveCommand.right());
         }
       },
-      child: child,
+      child: widget.child,
     );
   }
 }
