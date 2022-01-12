@@ -19,11 +19,12 @@ class MazeManager extends StateNotifier<MazeData> {
         activePlayers: playerCount
       );      
     });
-    // TODO: listen to position from the database
+    // listen to position from the database
     database.ref('position').onValue.listen((event) {
       print('Got position snapshot: ${event.snapshot}');
       var data = event.snapshot.value as Map<String,dynamic>;
       print('Got new position: $data');
+      // TODO: local client should also validate state?
       state = state.copyWith(
         playerLocation: Coordinates(x: data['x'], y: data['y'])
       );
