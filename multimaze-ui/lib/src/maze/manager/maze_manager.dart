@@ -3,7 +3,9 @@ import 'package:multimaze/src/maze/maze.dart';
 import 'package:riverpod/riverpod.dart';
 
 class MazeManager extends StateNotifier<MazeData> {
-  MazeManager() : super(parseMaze(rawMaze)) {
+  MazeManager() : super(parseMaze(rawMaze));
+
+  void init() {
     // Dart implementation of https://firebase.google.com/docs/database/android/offline-capabilities#section-sample
     FirebaseDatabase database = FirebaseDatabase.instance;
     database.ref('.info/connected').onValue.listen((event) {

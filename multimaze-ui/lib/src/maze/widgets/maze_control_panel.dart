@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multimaze/src/maze/maze.dart';
+import 'package:multimaze/src/maze/speech/speech_manager.dart';
 
 class MazeControlPanel extends StatelessWidget {
   const MazeControlPanel({
@@ -80,16 +82,18 @@ class _MetaGameState extends StatelessWidget {
   }
 }
 
-class _RecentCommands extends StatelessWidget {
-  const _RecentCommands(this.lastCommand,
-      {Key? key, required this.sizeMultiplier})
-      : super(key: key);
+class _RecentCommands extends ConsumerWidget {
+  const _RecentCommands(
+    this.lastCommand, {
+    Key? key,
+    required this.sizeMultiplier,
+  }) : super(key: key);
 
   final IndexedCommand? lastCommand;
   final double sizeMultiplier;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final lastMoveWidget = Text(
       (lastCommand == null)
           ? 'Last Command: None'
@@ -106,20 +110,28 @@ class _RecentCommands extends StatelessWidget {
             fontSize: 32 * sizeMultiplier,
           ),
     );
-    return Stack(children: <Widget>[
-      Positioned(
-        left: 0,
-        bottom: 10,
-        height: 100 * sizeMultiplier,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            moveCountWidget,
-            lastMoveWidget,
-          ],
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          left: 0,
+          bottom: 10,
+          height: 150 * sizeMultiplier,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              moveCountWidget,
+              lastMoveWidget,
+              Text(
+                'Last Words: ${ref.watch(speechManagerProvider).lastWords}',
+                style: Theme.of(context).textTheme.headline4!.copyWith(
+                      fontSize: 32 * sizeMultiplier,
+                    ),
+              ),
+            ],
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
