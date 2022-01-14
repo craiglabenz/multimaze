@@ -93,6 +93,7 @@ class MazeManager extends StateNotifier<MazeData> {
       right: (_) => Coordinates(x: oldX + 1, y: oldY),
     );
     // send new state to RTDB
+    // TODO: test how this works with a transaction
     database.ref('position').set({
       'x': newLocation.x, 
       'y': newLocation.y
