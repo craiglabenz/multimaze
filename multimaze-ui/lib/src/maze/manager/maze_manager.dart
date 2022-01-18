@@ -23,7 +23,10 @@ class MazeManager extends StateNotifier<MazeData> {
     database.ref('position').onValue.listen((event) {
       var data = event.snapshot.value as Map<String, dynamic>;
       state = state.copyWith(
-          playerLocation: Coordinates(x: data['x'], y: data['y']));
+        playerLocation: Coordinates(x: data['x'], y: data['y']),
+        numberOfMoves: data.containsKey('moves') ? data['moves'] : 0,
+        lastCommand: MoveCommand.fromDisplay(data['lastMove']),
+      );
     });
   }
 
@@ -94,8 +97,24 @@ class MazeManager extends StateNotifier<MazeData> {
       left: (_) => Coordinates(x: oldX - 1, y: oldY),
       right: (_) => Coordinates(x: oldX + 1, y: oldY),
     );
+    if (newLocation.x < 0 ||
+        newLocation.y < 0 ||
+        newLocation.x > state.columns - 1 ||
+        newLocation.y > state.rows - 1) {
+      // Nothing to do here. The game silently discards moves out of bounds.
+      return;
+    }
+    if (state.wallLocations.contains(newLocation)) {
+      // Nothing to do here. The game silently discards moves into walls.
+      return;
+    }
     // send new state to RTDB
-    database.ref('position').set({'x': newLocation.x, 'y': newLocation.y});
+    database.ref('position').set({
+      'x': newLocation.x,
+      'y': newLocation.y,
+      'moves': ServerValue.increment(1),
+      'lastMove': command.toDisplay(),
+    });
     return;
   }
 }

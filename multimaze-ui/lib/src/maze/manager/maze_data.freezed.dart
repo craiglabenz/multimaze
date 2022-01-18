@@ -24,7 +24,8 @@ class _$MazeDataTearOff {
       required int rows,
       required int columns,
       required int playerCount,
-      IndexedCommand? lastCommand,
+      MoveCommand? lastCommand,
+      int numberOfMoves = 0,
       required DateTime startTime,
       required List<Coordinates> wallLocations}) {
     return _MazeData(
@@ -34,6 +35,7 @@ class _$MazeDataTearOff {
       columns: columns,
       playerCount: playerCount,
       lastCommand: lastCommand,
+      numberOfMoves: numberOfMoves,
       startTime: startTime,
       wallLocations: wallLocations,
     );
@@ -74,7 +76,10 @@ mixin _$MazeData {
   /// The last successful command issued in the game.
   ///
   /// Should only be `null` at the start of a new game.
-  IndexedCommand? get lastCommand => throw _privateConstructorUsedError;
+  MoveCommand? get lastCommand => throw _privateConstructorUsedError;
+
+  /// The total number of moves submitted from all players.
+  int get numberOfMoves => throw _privateConstructorUsedError;
 
   /// The time at which this game starts and commands will be accepted, in UTC.
   DateTime get startTime => throw _privateConstructorUsedError;
@@ -98,13 +103,14 @@ abstract class $MazeDataCopyWith<$Res> {
       int rows,
       int columns,
       int playerCount,
-      IndexedCommand? lastCommand,
+      MoveCommand? lastCommand,
+      int numberOfMoves,
       DateTime startTime,
       List<Coordinates> wallLocations});
 
   $CoordinatesCopyWith<$Res> get playerLocation;
   $CoordinatesCopyWith<$Res> get targetLocation;
-  $IndexedCommandCopyWith<$Res>? get lastCommand;
+  $MoveCommandCopyWith<$Res>? get lastCommand;
 }
 
 /// @nodoc
@@ -123,6 +129,7 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
     Object? columns = freezed,
     Object? playerCount = freezed,
     Object? lastCommand = freezed,
+    Object? numberOfMoves = freezed,
     Object? startTime = freezed,
     Object? wallLocations = freezed,
   }) {
@@ -150,7 +157,11 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
       lastCommand: lastCommand == freezed
           ? _value.lastCommand
           : lastCommand // ignore: cast_nullable_to_non_nullable
-              as IndexedCommand?,
+              as MoveCommand?,
+      numberOfMoves: numberOfMoves == freezed
+          ? _value.numberOfMoves
+          : numberOfMoves // ignore: cast_nullable_to_non_nullable
+              as int,
       startTime: startTime == freezed
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -177,12 +188,12 @@ class _$MazeDataCopyWithImpl<$Res> implements $MazeDataCopyWith<$Res> {
   }
 
   @override
-  $IndexedCommandCopyWith<$Res>? get lastCommand {
+  $MoveCommandCopyWith<$Res>? get lastCommand {
     if (_value.lastCommand == null) {
       return null;
     }
 
-    return $IndexedCommandCopyWith<$Res>(_value.lastCommand!, (value) {
+    return $MoveCommandCopyWith<$Res>(_value.lastCommand!, (value) {
       return _then(_value.copyWith(lastCommand: value));
     });
   }
@@ -199,7 +210,8 @@ abstract class _$MazeDataCopyWith<$Res> implements $MazeDataCopyWith<$Res> {
       int rows,
       int columns,
       int playerCount,
-      IndexedCommand? lastCommand,
+      MoveCommand? lastCommand,
+      int numberOfMoves,
       DateTime startTime,
       List<Coordinates> wallLocations});
 
@@ -208,7 +220,7 @@ abstract class _$MazeDataCopyWith<$Res> implements $MazeDataCopyWith<$Res> {
   @override
   $CoordinatesCopyWith<$Res> get targetLocation;
   @override
-  $IndexedCommandCopyWith<$Res>? get lastCommand;
+  $MoveCommandCopyWith<$Res>? get lastCommand;
 }
 
 /// @nodoc
@@ -228,6 +240,7 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
     Object? columns = freezed,
     Object? playerCount = freezed,
     Object? lastCommand = freezed,
+    Object? numberOfMoves = freezed,
     Object? startTime = freezed,
     Object? wallLocations = freezed,
   }) {
@@ -255,7 +268,11 @@ class __$MazeDataCopyWithImpl<$Res> extends _$MazeDataCopyWithImpl<$Res>
       lastCommand: lastCommand == freezed
           ? _value.lastCommand
           : lastCommand // ignore: cast_nullable_to_non_nullable
-              as IndexedCommand?,
+              as MoveCommand?,
+      numberOfMoves: numberOfMoves == freezed
+          ? _value.numberOfMoves
+          : numberOfMoves // ignore: cast_nullable_to_non_nullable
+              as int,
       startTime: startTime == freezed
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -278,6 +295,7 @@ class _$_MazeData implements _MazeData {
       required this.columns,
       required this.playerCount,
       this.lastCommand,
+      this.numberOfMoves = 0,
       required this.startTime,
       required this.wallLocations});
 
@@ -317,7 +335,12 @@ class _$_MazeData implements _MazeData {
   /// The last successful command issued in the game.
   ///
   /// Should only be `null` at the start of a new game.
-  final IndexedCommand? lastCommand;
+  final MoveCommand? lastCommand;
+  @JsonKey()
+  @override
+
+  /// The total number of moves submitted from all players.
+  final int numberOfMoves;
   @override
 
   /// The time at which this game starts and commands will be accepted, in UTC.
@@ -330,7 +353,7 @@ class _$_MazeData implements _MazeData {
 
   @override
   String toString() {
-    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, rows: $rows, columns: $columns, playerCount: $playerCount, lastCommand: $lastCommand, startTime: $startTime, wallLocations: $wallLocations)';
+    return 'MazeData(playerLocation: $playerLocation, targetLocation: $targetLocation, rows: $rows, columns: $columns, playerCount: $playerCount, lastCommand: $lastCommand, numberOfMoves: $numberOfMoves, startTime: $startTime, wallLocations: $wallLocations)';
   }
 
   @override
@@ -348,6 +371,8 @@ class _$_MazeData implements _MazeData {
                 .equals(other.playerCount, playerCount) &&
             const DeepCollectionEquality()
                 .equals(other.lastCommand, lastCommand) &&
+            const DeepCollectionEquality()
+                .equals(other.numberOfMoves, numberOfMoves) &&
             const DeepCollectionEquality().equals(other.startTime, startTime) &&
             const DeepCollectionEquality()
                 .equals(other.wallLocations, wallLocations));
@@ -362,6 +387,7 @@ class _$_MazeData implements _MazeData {
       const DeepCollectionEquality().hash(columns),
       const DeepCollectionEquality().hash(playerCount),
       const DeepCollectionEquality().hash(lastCommand),
+      const DeepCollectionEquality().hash(numberOfMoves),
       const DeepCollectionEquality().hash(startTime),
       const DeepCollectionEquality().hash(wallLocations));
 
@@ -378,7 +404,8 @@ abstract class _MazeData implements MazeData {
       required int rows,
       required int columns,
       required int playerCount,
-      IndexedCommand? lastCommand,
+      MoveCommand? lastCommand,
+      int numberOfMoves,
       required DateTime startTime,
       required List<Coordinates> wallLocations}) = _$_MazeData;
 
@@ -418,7 +445,11 @@ abstract class _MazeData implements MazeData {
   /// The last successful command issued in the game.
   ///
   /// Should only be `null` at the start of a new game.
-  IndexedCommand? get lastCommand;
+  MoveCommand? get lastCommand;
+  @override
+
+  /// The total number of moves submitted from all players.
+  int get numberOfMoves;
   @override
 
   /// The time at which this game starts and commands will be accepted, in UTC.

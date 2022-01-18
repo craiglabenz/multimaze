@@ -32,9 +32,9 @@ class SpeechManager extends StateNotifier<SpeechState> {
       );
 
   void _onStatusChanged(String status) {
-    if (status == "done") {
-      _startListening();
-    }
+    // if (status == "done") {
+    //   _startListening();
+    // }
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) {

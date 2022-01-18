@@ -17,17 +17,14 @@ class MoveCommand with _$MoveCommand {
         left: (_) => 'Left',
         right: (_) => 'Right',
       );
-}
 
-/// Wraps each [MoveCommand] with a number telling which move number it was over
-/// the course of a single game session.
-///
-/// Note that invalid/discarded [MoveCommand] values will never enter the state
-/// as an [IndexedCommand].
-@Freezed()
-class IndexedCommand with _$IndexedCommand {
-  const factory IndexedCommand({
-    required MoveCommand command,
-    required int moveNumber,
-  }) = _IndexCommand;
+  static Map<String, MoveCommand> get _fromDisplayMap => <String, MoveCommand>{
+        'up': const MoveCommand.up(),
+        'down': const MoveCommand.down(),
+        'left': const MoveCommand.left(),
+        'right': const MoveCommand.right(),
+      };
+
+  static MoveCommand? fromDisplay(String value) =>
+      _fromDisplayMap[value.toLowerCase()];
 }
