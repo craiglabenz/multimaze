@@ -115,7 +115,6 @@ class MazeManager extends StateNotifier<MazeData> {
       'moves': ServerValue.increment(1),
       'lastMove': command.toDisplay(),
     });
-    return;
   }
 }
 
