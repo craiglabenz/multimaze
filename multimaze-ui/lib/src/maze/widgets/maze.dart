@@ -64,6 +64,7 @@ class Maze extends StatelessWidget {
               child: MazeControlPanel(
                 isGameCompleted:
                     mazeData.playerLocation == mazeData.targetLocation,
+                numberOfMoves: mazeData.numberOfMoves,
                 playerCount: mazeData.playerCount,
                 lastCommand: mazeData.lastCommand,
                 startTime: mazeData.startTime,

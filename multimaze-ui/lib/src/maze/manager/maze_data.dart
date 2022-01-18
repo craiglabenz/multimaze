@@ -36,7 +36,10 @@ class MazeData with _$MazeData {
     /// The last successful command issued in the game.
     ///
     /// Should only be `null` at the start of a new game.
-    IndexedCommand? lastCommand,
+    MoveCommand? lastCommand,
+
+    /// The total number of moves submitted from all players.
+    @Default(0) int numberOfMoves,
 
     /// The time at which this game starts and commands will be accepted, in UTC.
     required DateTime startTime,

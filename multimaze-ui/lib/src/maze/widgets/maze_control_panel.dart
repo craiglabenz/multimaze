@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multimaze/src/maze/maze.dart';
+import 'package:multimaze/src/maze/speech/speech_manager.dart';
 
 class MazeControlPanel extends StatelessWidget {
   const MazeControlPanel({
@@ -7,14 +9,16 @@ class MazeControlPanel extends StatelessWidget {
     required this.playerCount,
     required this.lastCommand,
     required this.isGameCompleted,
+    required this.numberOfMoves,
     required this.sizeMultiplier,
     required this.startTime,
   }) : super(key: key);
 
   final bool isGameCompleted;
+  final int numberOfMoves;
   final int playerCount;
   final double sizeMultiplier;
-  final IndexedCommand? lastCommand;
+  final MoveCommand? lastCommand;
   final DateTime startTime;
 
   @override
@@ -26,7 +30,11 @@ class MazeControlPanel extends StatelessWidget {
           top: 0,
           bottom: 0,
           right: 150 * sizeMultiplier,
-          child: _RecentCommands(lastCommand, sizeMultiplier: sizeMultiplier),
+          child: _RecentCommands(
+            lastCommand: lastCommand,
+            numberOfMoves: numberOfMoves,
+            sizeMultiplier: sizeMultiplier,
+          ),
         ),
         Positioned(
           right: 0,
@@ -80,46 +88,53 @@ class _MetaGameState extends StatelessWidget {
   }
 }
 
-class _RecentCommands extends StatelessWidget {
-  const _RecentCommands(this.lastCommand,
-      {Key? key, required this.sizeMultiplier})
-      : super(key: key);
+class _RecentCommands extends ConsumerWidget {
+  const _RecentCommands({
+    required this.lastCommand,
+    required this.numberOfMoves,
+    Key? key,
+    required this.sizeMultiplier,
+  }) : super(key: key);
 
-  final IndexedCommand? lastCommand;
+  final int numberOfMoves;
+  final MoveCommand? lastCommand;
   final double sizeMultiplier;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final style = Theme.of(context).textTheme.headline4!.copyWith(
+          fontSize: 32 * sizeMultiplier,
+        );
     final lastMoveWidget = Text(
       (lastCommand == null)
           ? 'Last Command: None'
-          : 'Last Command: ${lastCommand!.command.toDisplay()}',
-      style: Theme.of(context).textTheme.headline4!.copyWith(
-            fontSize: 32 * sizeMultiplier,
-          ),
+          : 'Last Command: ${lastCommand!.toDisplay()}',
+      style: style,
     );
     final moveCountWidget = Text(
-      (lastCommand == null)
-          ? 'Total Commands: 0'
-          : 'Total Commands: ${lastCommand!.moveNumber}',
-      style: Theme.of(context).textTheme.headline4!.copyWith(
-            fontSize: 32 * sizeMultiplier,
-          ),
+      'Total Commands: $numberOfMoves',
+      style: style,
     );
-    return Stack(children: <Widget>[
-      Positioned(
-        left: 0,
-        bottom: 10,
-        height: 100 * sizeMultiplier,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            moveCountWidget,
-            lastMoveWidget,
-          ],
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          left: 0,
+          bottom: 10,
+          height: 150 * sizeMultiplier,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              moveCountWidget,
+              lastMoveWidget,
+              Text(
+                'Last Words: ${ref.watch(speechManagerProvider).lastWords}',
+                style: style,
+              ),
+            ],
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }

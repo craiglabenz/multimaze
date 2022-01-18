@@ -3,9 +3,10 @@ import 'package:multimaze/src/maze/maze.dart';
 import 'package:riverpod/riverpod.dart';
 
 class MazeManager extends StateNotifier<MazeData> {
+  MazeManager() : super(parseMaze(rawMaze));
   FirebaseDatabase database = FirebaseDatabase.instance;
 
-  MazeManager() : super(parseMaze(rawMaze)) {
+  void init() {
     // Dart implementation of https://firebase.google.com/docs/database/android/offline-capabilities#section-sample
     database.ref('.info/connected').onValue.listen((event) {
       if (event.snapshot.value == true) {
@@ -22,7 +23,10 @@ class MazeManager extends StateNotifier<MazeData> {
     database.ref('position').onValue.listen((event) {
       var data = event.snapshot.value as Map<String, dynamic>;
       state = state.copyWith(
-          playerLocation: Coordinates(x: data['x'], y: data['y']));
+        playerLocation: Coordinates(x: data['x'], y: data['y']),
+        numberOfMoves: data.containsKey('moves') ? data['moves'] : 0,
+        lastCommand: MoveCommand.fromDisplay(data['lastMove']),
+      );
     });
   }
 
@@ -46,7 +50,7 @@ class MazeManager extends StateNotifier<MazeData> {
     late Coordinates targetLocation;
 
     // Iterate over the string representation of a maze.
-    Map<String,bool> json = {};
+    Map<String, bool> json = {};
     int yAxis = 0;
     for (String row in rawMaze.reversed) {
       int xAxis = 0;
@@ -69,7 +73,8 @@ class MazeManager extends StateNotifier<MazeData> {
     // alternative JavaScript to split maze: ["+rawMaze.map((line, y) => "["+line.split("").map((c,x) => `"${c}"`).join(", ")+"], ").join("")+"]"
     if (false) {
       // This code prints the maze in a format that can be copy/pasted into the Realtime Database
-      print('MAZE JSON: { ${json.keys.map((key) => '"$key": ${json[key]}' ).join(", ")} }');
+      print(
+          'MAZE JSON: { ${json.keys.map((key) => '"$key": ${json[key]}').join(", ")} }');
     }
 
     return MazeData(
@@ -92,13 +97,6 @@ class MazeManager extends StateNotifier<MazeData> {
       left: (_) => Coordinates(x: oldX - 1, y: oldY),
       right: (_) => Coordinates(x: oldX + 1, y: oldY),
     );
-    // send new state to RTDB
-    // TODO: test how this works with a transaction
-    database.ref('position').set({
-      'x': newLocation.x, 
-      'y': newLocation.y
-    });
-    return;
     if (newLocation.x < 0 ||
         newLocation.y < 0 ||
         newLocation.x > state.columns - 1 ||
@@ -110,14 +108,14 @@ class MazeManager extends StateNotifier<MazeData> {
       // Nothing to do here. The game silently discards moves into walls.
       return;
     }
-    state = state.copyWith(
-      lastCommand: IndexedCommand(
-        command: command,
-        moveNumber:
-            state.lastCommand == null ? 1 : state.lastCommand!.moveNumber + 1,
-      ),
-      playerLocation: newLocation,
-    );
+    // send new state to RTDB
+    database.ref('position').set({
+      'x': newLocation.x,
+      'y': newLocation.y,
+      'moves': ServerValue.increment(1),
+      'lastMove': command.toDisplay(),
+    });
+    return;
   }
 }
 
