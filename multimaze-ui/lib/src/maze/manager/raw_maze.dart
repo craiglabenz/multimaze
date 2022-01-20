@@ -7,7 +7,7 @@
 ///
 /// The valid characters are:
 ///   * space - empty square
-///   * astericks - an impassible wall
+///   * asterisks - an impassable wall
 ///   * @ - the player's starting location
 ///   * x - the target location / victory square (X marks the spot :))
 final List<String> rawMaze = [
