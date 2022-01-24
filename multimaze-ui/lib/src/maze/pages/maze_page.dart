@@ -14,7 +14,6 @@ class MazePage extends ConsumerStatefulWidget {
 class _MazePageState extends ConsumerState<MazePage> {
   @override
   void initState() {
-    ref.read(mazeManagerProvider.notifier).init();
     ref.read(speechManagerProvider.notifier).init();
     super.initState();
   }
