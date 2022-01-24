@@ -1,34 +1,8 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:multimaze/src/maze/maze.dart';
 import 'package:riverpod/riverpod.dart';
 
 class MazeManager extends StateNotifier<MazeData> {
   MazeManager() : super(parseMaze(rawMaze));
-  FirebaseDatabase database = FirebaseDatabase.instance;
-
-  void init() {
-    // Dart implementation of https://firebase.google.com/docs/database/android/offline-capabilities#section-sample
-    database.ref('.info/connected').onValue.listen((event) {
-      if (event.snapshot.value == true) {
-        var connectionRef = database.ref('connections').push();
-        connectionRef.onDisconnect().remove();
-        connectionRef.set(true);
-      }
-    });
-    database.ref('connections').onValue.listen((event) {
-      var playerCount = event.snapshot.children.length;
-      state = state.copyWith(playerCount: playerCount);
-    });
-    // listen to position from the database
-    database.ref('position').onValue.listen((event) {
-      var data = event.snapshot.value as Map<String, dynamic>;
-      state = state.copyWith(
-        playerLocation: Coordinates(x: data['x'], y: data['y']),
-        numberOfMoves: data.containsKey('moves') ? data['moves'] : 0,
-        lastCommand: MoveCommand.fromDisplay(data['lastMove']),
-      );
-    });
-  }
 
   static void validateRawMazeDimensions(List<String> rawMaze) {
     int rowNumber = 1;
@@ -70,12 +44,6 @@ class MazeManager extends StateNotifier<MazeData> {
       }
       yAxis += 1;
     }
-    // alternative JavaScript to split maze: ["+rawMaze.map((line, y) => "["+line.split("").map((c,x) => `"${c}"`).join(", ")+"], ").join("")+"]"
-    if (false) {
-      // This code prints the maze in a format that can be copy/pasted into the Realtime Database
-      print(
-          'MAZE JSON: { ${json.keys.map((key) => '"$key": ${json[key]}').join(", ")} }');
-    }
 
     return MazeData(
       playerCount: 1,
@@ -89,6 +57,10 @@ class MazeManager extends StateNotifier<MazeData> {
   }
 
   void send(MoveCommand command) {
+    if (state.startTime.difference(DateTime.now()) > Duration.zero) {
+      // No moving before we start!
+      return;
+    }
     final oldX = state.playerLocation.x;
     final oldY = state.playerLocation.y;
     final newLocation = command.map(
@@ -108,13 +80,12 @@ class MazeManager extends StateNotifier<MazeData> {
       // Nothing to do here. The game silently discards moves into walls.
       return;
     }
-    // send new state to RTDB
-    database.ref('position').set({
-      'x': newLocation.x,
-      'y': newLocation.y,
-      'moves': ServerValue.increment(1),
-      'lastMove': command.toDisplay(),
-    });
+
+    state = state.copyWith(
+      playerLocation: newLocation,
+      numberOfMoves: state.numberOfMoves + 1,
+      lastCommand: command,
+    );
   }
 }
 
