@@ -89,6 +89,10 @@ class MazeManager extends StateNotifier<MazeData> {
   }
 
   void send(MoveCommand command) {
+    if (state.startTime.difference(DateTime.now()) > Duration.zero) {
+      // No moving before we start!
+      return;
+    }
     final oldX = state.playerLocation.x;
     final oldY = state.playerLocation.y;
     final newLocation = command.map(
@@ -97,6 +101,7 @@ class MazeManager extends StateNotifier<MazeData> {
       left: (_) => Coordinates(x: oldX - 1, y: oldY),
       right: (_) => Coordinates(x: oldX + 1, y: oldY),
     );
+    /*
     if (newLocation.x < 0 ||
         newLocation.y < 0 ||
         newLocation.x > state.columns - 1 ||
@@ -108,13 +113,22 @@ class MazeManager extends StateNotifier<MazeData> {
       // Nothing to do here. The game silently discards moves into walls.
       return;
     }
+    */
     // send new state to RTDB
-    database.ref('position').set({
+    print('Setting DB position to $newLocation, lastMove=${command.toDisplay()}');
+    database.ref('position').update({
       'x': newLocation.x,
       'y': newLocation.y,
       'moves': ServerValue.increment(1),
       'lastMove': command.toDisplay(),
+    }).catchError((e) {
+      print('Error: $e');
     });
+    // state = state.copyWith(
+    //   playerLocation: newLocation,
+    //   numberOfMoves: state.numberOfMoves + 1,
+    //   lastCommand: command,
+    // );
   }
 }
 
