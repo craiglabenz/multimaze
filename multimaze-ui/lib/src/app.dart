@@ -9,7 +9,7 @@ class MazeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Multimaze',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
