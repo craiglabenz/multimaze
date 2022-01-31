@@ -1,0 +1,46 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "connections": {
+      ".read": true,
+      "$connectionid": {
+        ".write": true
+      }
+    },
+    "position": {
+      ".read": true,
+      ".write": "
+!root.child('maze').child(newData.child('x').val() + ' ' + newData.child('y').val()).exists()
+      ",
+      ".validate": "newData.hasChildren(['x', 'y', 'moves', 'lastMove'])",
+      "x": {
+        ".validate": "
+         	 newData.val() - data.val() >= -1
+        && newData.val() - data.val() <=  1
+        "
+      },
+      "y": {
+        ".validate": "
+         	 newData.val() - data.val() >= -1
+        && newData.val() - data.val() <=  1
+        "
+      },
+      "moves": {
+        ".validate": "
+           newData.isNumber() 
+        && newData.val() === data.val() + 1
+        "
+      },
+      "lastMove": {
+        ".validate": "
+          newData.isString() 
+          && newData.val().matches(/^(Up|Right|Left|Down)$/)
+        "
+      },
+      "$other": {
+        ".validate": false // reject unknown properties
+      },
+    }
+  }
+}
