@@ -25,7 +25,12 @@ class MazeManager extends StateNotifier<MazeData> {
       state = state.copyWith(
         playerLocation: Coordinates(x: data['x'], y: data['y']),
         numberOfMoves: data.containsKey('moves') ? data['moves'] : 0,
-        lastCommand: MoveCommand.fromDisplay(data['lastMove']),
+        lastCommand: data['lastMove'] != null
+            ? MoveCommand.fromDisplay(data['lastMove'])
+            : null,
+        startTime: data["startTime"] != null
+            ? DateTime.parse(data["startTime"])
+            : state.startTime,
       );
     });
   }
@@ -71,8 +76,10 @@ class MazeManager extends StateNotifier<MazeData> {
       yAxis += 1;
     }
     // alternative JavaScript to split maze: ["+rawMaze.map((line, y) => "["+line.split("").map((c,x) => `"${c}"`).join(", ")+"], ").join("")+"]"
+    // ignore: dead_code
     if (false) {
       // This code prints the maze in a format that can be copy/pasted into the Realtime Database
+      // ignore: avoid_print
       print(
           'MAZE JSON: { ${json.keys.map((key) => '"$key": ${json[key]}').join(", ")} }');
     }
@@ -93,6 +100,11 @@ class MazeManager extends StateNotifier<MazeData> {
       // No moving before we start!
       return;
     }
+    if (state.playerLocation == state.targetLocation) {
+      // Once the player wins, stop accepting move commands. The server
+      // will reset the game.
+      // return;
+    }
     final oldX = state.playerLocation.x;
     final oldY = state.playerLocation.y;
     final newLocation = command.map(
@@ -101,7 +113,6 @@ class MazeManager extends StateNotifier<MazeData> {
       left: (_) => Coordinates(x: oldX - 1, y: oldY),
       right: (_) => Coordinates(x: oldX + 1, y: oldY),
     );
-    /*
     if (newLocation.x < 0 ||
         newLocation.y < 0 ||
         newLocation.x > state.columns - 1 ||
@@ -112,10 +123,7 @@ class MazeManager extends StateNotifier<MazeData> {
     if (state.wallLocations.contains(newLocation)) {
       // Nothing to do here. The game silently discards moves into walls.
       return;
-    }
-    */
-    // send new state to RTDB
-    print('Setting DB position to $newLocation, lastMove=${command.toDisplay()}');
+    } // send new state to RTDB
     database.ref('position').update({
       'x': newLocation.x,
       'y': newLocation.y,

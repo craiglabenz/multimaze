@@ -1,0 +1,4 @@
+multimaze-ui/build/*
+public/*
+.vscode/
+.firebase/
